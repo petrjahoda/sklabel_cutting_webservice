@@ -19,6 +19,7 @@ time.addEventListener('time', (e) => {
 window.addEventListener("keyup", function (event) {
     data = data.replace("Meta", "");
     data = data.replaceAll("Enter", "");
+    data = data.replaceAll("Shift", "");
     if (event.key === "Enter" && data.length > 0) {
         console.log("DATA: " + data)
         checkOrder(data);

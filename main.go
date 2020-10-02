@@ -147,6 +147,9 @@ func checkOrderInSystem(order string) bool {
 	logInfo("Check Order In System", "Checking order "+order)
 	logInfo("Check Order In System", "Order checked ")
 	//TODO: check order
+	if order == "12345" {
+		return true
+	}
 	return false
 }
 
