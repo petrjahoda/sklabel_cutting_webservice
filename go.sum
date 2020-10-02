@@ -1,0 +1,10 @@
+github.com/TwinProduction/go-color v0.0.2 h1:aSeGMv37lb4W3j31fEfWHAkG106vP3SZ5XNGYbQ3hQ8=
+github.com/TwinProduction/go-color v0.0.2/go.mod h1:onvxOmoSjU1+/TVn9R/UXkkq+AXABtvKG9ol7pdNNAs=
+github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
+github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
+github.com/julienschmidt/sse v0.0.0-20190921213156-72db694fe9e6 h1:AbjaMap/vJN5AnfsdtO3qJW5hGcJ7hf09fWPamwREOc=
+github.com/julienschmidt/sse v0.0.0-20190921213156-72db694fe9e6/go.mod h1:O3z+B05HD3YfLlfmvbRP/338uqKudexlEBkwFxtGxHE=
+github.com/kardianos/service v1.1.0 h1:QV2SiEeWK42P0aEmGcsAgjApw/lRxkwopvT+Gu6t1/0=
+github.com/kardianos/service v1.1.0/go.mod h1:RrJI2xn5vve/r32U5suTbeaSGoMU6GbNPoj36CVYcHc=
+golang.org/x/sys v0.0.0-20190204203706-41f3e6584952 h1:FDfvYgoVsA7TTZSbgiqjAbfPbK47CNHdWl3h/PJtii0=
+golang.org/x/sys v0.0.0-20190204203706-41f3e6584952/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
