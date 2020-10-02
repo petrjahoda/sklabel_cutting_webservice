@@ -71,8 +71,6 @@ func (p *program) run() {
 	router.Handler("GET", "/time", timer)
 
 	router.GET("/", origin)
-	router.GET("/order_scanning", orderScanning)
-	router.GET("/order_error", orderError)
 	router.GET("/user_error", userError)
 	router.GET("/entry_pcs", entryPcs)
 	router.GET("/home", home)
