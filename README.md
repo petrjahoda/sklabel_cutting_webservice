@@ -18,6 +18,17 @@
 ## Description
 Go web service for SK Label Cutting Workplaces
 
+## Todo
+- [x] struktura projektu
+- [x] kontroly na zacatku
+- [x] nacteni zakazky, kontrola
+- [ ] odvadeni kusu
+- [ ] cyklus prestavky
+- [ ] ukonceni rezani
+- [ ] prehozeni obsluhy
+- [ ] procesy na pozadi
+- [ ] otestovani na realnych datech
+
 ## Behavior
 1. System first checks request from ip address
     - ip address has assigned deviceId -> OK
