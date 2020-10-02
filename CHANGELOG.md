@@ -23,3 +23,4 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 - added checking order
 - added screen for inserting barcode
 - added main screen
+- added links to buttons on home screen
