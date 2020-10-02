@@ -18,3 +18,8 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
 ### Added
 - initial commit
+- added checking for device from ip address
+- added checking for user
+- added checking order
+- added screen for inserting barcode
+- added main screen

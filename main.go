@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"github.com/julienschmidt/sse"
 	"github.com/kardianos/service"
@@ -9,7 +10,21 @@ import (
 	"time"
 )
 
-const version = "2020.3.3.28"
+type SaveToK2Data struct {
+	Data string
+}
+
+type ResponseData struct {
+	Data string
+}
+
+type StartOrderData struct {
+	Order    string
+	DeviceId string
+	UserId   string
+}
+
+const version = "2020.4.1.2"
 const serviceName = "SK Label Cutting Webservice"
 const serviceDescription = "Web Service for terminals for cutting workplaces"
 const zapsiDatabaseConnection = "user=postgres password=Zps05..... dbname=version3 host=database port=5432 sslmode=disable"
@@ -53,16 +68,22 @@ func (p *program) run() {
 	router.ServeFiles("/html/*filepath", http.Dir("html"))
 	router.ServeFiles("/css/*filepath", http.Dir("css"))
 
-	router.GET("/", entry)
+	router.Handler("GET", "/time", timer)
+
+	router.GET("/", origin)
 	router.GET("/order_scanning", orderScanning)
-	router.GET("/order_scanning", orderError)
-	router.GET("/order_scanning", userError)
+	router.GET("/order_error", orderError)
+	router.GET("/user_error", userError)
 	router.GET("/entry_pcs", entryPcs)
 	router.GET("/home", home)
 	router.GET("/idle_running", idleRunning)
 	router.GET("/idle_select", idleSelect)
 	router.GET("/login", login)
-	
+
+	router.POST("/check_order", checkOrder)
+	router.POST("/save_code", saveCode)
+	router.POST("/start_order", startOrder)
+
 	go streamTime(timer)
 	err := http.ListenAndServe(":80", router)
 	if err != nil {
@@ -72,16 +93,67 @@ func (p *program) run() {
 	logInfo("MAIN", serviceName+" ["+version+"] running")
 }
 
+func startOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("Start Order", "Saving order in Zapsi called")
+	var data StartOrderData
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("MAIN", err.Error())
+		return
+	}
+	logInfo("Start Order", "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
+	//TODO: SaveToZapsi(data)
+	logInfo("Start Order", "Saving order in Zapsi finished")
+}
+
+func saveCode(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("Save Code", "Saving code called")
+	var data SaveToK2Data
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("MAIN", err.Error())
+		return
+	}
+	//TODO: SaveToK2(data.Data)
+	logInfo("Save Code", "Saving code finished")
+
+}
+
+func checkOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("Check Order", "Checking order called")
+	var data SaveToK2Data
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("MAIN", err.Error())
+		return
+	}
+
+	orderIsInSystem := checkOrderInSystem(data.Data)
+	var responseData ResponseData
+	if !orderIsInSystem {
+		responseData.Data = "nok"
+		writer.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(writer).Encode(responseData)
+		logInfo("Check Order", "Checking order finished")
+		return
+	}
+	responseData.Data = "ok"
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(responseData)
+	logInfo("Check Order", "Checking order finished")
+}
+
+func checkOrderInSystem(order string) bool {
+	logInfo("Check Order In System", "Checking order "+order)
+	logInfo("Check Order In System", "Order checked ")
+	//TODO: check order
+	return false
+}
 
 func streamTime(streamer *sse.Streamer) {
 	logInfo("SSE", "Streaming time process started")
 	for {
-		location, err := time.LoadLocation("Europe/Prague")
-		if err != nil {
-			logError("MAIN", "Problem loading timezone for Europe/Prague")
-		} else {
-			streamer.SendString("", "time", time.Now().In(location).Format("15:04:05"))
-			time.Sleep(1 * time.Second)
-		}
+		streamer.SendString("", "time", time.Now().Format("15:04:05"))
+		time.Sleep(1 * time.Second)
 	}
 }

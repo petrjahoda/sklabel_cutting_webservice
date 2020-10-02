@@ -16,6 +16,24 @@
 # SK Label Cutting Webservice
 
 ## Description
-Go web service for SK Label Cutting
+Go web service for SK Label Cutting Workplaces
 
+## Behavior
+1. System first checks request from ip address
+    - ip address has assigned deviceId -> OK
+    - ip address does not have assigned deviceId -> NOK   
+>![ipaddress_error](screens/no-ip.png)
+2. System then checks if workplace has any user logged
+    - user is logged -> OK
+    - user is not logged -> NOK
+>![user_error](screens/no-user.png)
+3. Screen for scanning barcode order is displayed
+    - if code exists in K2 -> OK
+    - if code does not exists in K2 -> NOK
+>![order](screens/read-code.png)
+>
+>![no-code](screens/no-code.png) 
+4. After successfully scanning the code, main screen is displayed
+>![main](screens/main.png) 
+     
 © 2020 Petr Jahoda

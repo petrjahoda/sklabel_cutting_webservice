@@ -7,4 +7,5 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/julienschmidt/sse v0.0.0-20190921213156-72db694fe9e6
 	github.com/kardianos/service v1.1.0
+	golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f // indirect
 )

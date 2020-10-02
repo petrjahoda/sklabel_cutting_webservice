@@ -5,8 +5,13 @@
     <title>Order Scanning </title>
 </head>
 <link rel="stylesheet" href="/css/terminal.css">
-<script src="/js/order_scanning.js"></script>
+<script src="/js/order_scanning.js" defer></script>
 <body>
-<h1>Order scanning</h1>
+<span style="position: absolute;left:0;top:0" id="workplace" data-deviceid="{{.DeviceId}}">{{.WorkplaceCode}}</span>
+<span id='time'>{{.Time}}</span>
+<p style="margin-bottom:0" id="user" data-userid="{{.UserId}}">Přihlášen: {{.User}}</p>
+<br>
+<p style="margin-bottom:0" id="result">Načtěte čárový kód zakázky</p>
+<button class="button cnt3 pos2" id="goback">Zpět</button>
 </body>
 </html>

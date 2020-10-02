@@ -1,3 +1,167 @@
-h1 {
-    color: red;
+body {
+    position: relative;
+    width: 1900px;
+    height: 1020px;
+    overflow: hidden;
+    background: #000;
+    font-family: Arial, sans-serif;
+    cursor: none;
+    color: #fff;
+    user-select: none;
+    -webkit-user-select: none;
+    font-size: 60px;
+    font-weight: bold
+}
+
+#flashes {
+    position: absolute;
+    top: 100px;
+    text-align: center;
+    width: 600px;
+    left: 100px;
+    border: 4px red solid;
+    background: #e6e6e6;
+    font-size: 30px;
+    line-height: 50px;
+    border-radius: 10px;
+}
+
+.yellow {
+    background: #f5a623;
+    border-color: #f5a623
+}
+
+.blue {
+    background: #4a90e2;
+    border-color: #4a90e2
+}
+
+.green, td.green {
+    background: #7ed321;
+    border-color: #7ed321
+}
+
+.red, td.red {
+    background: #f0021b;
+    border-color: #f0021b
+}
+
+.vertical-text {
+    transform: rotate(90deg);
+    transform-origin: left top 0;
+}
+
+.txt-green {
+    color: #7ed321;
+}
+
+.txt-yellow {
+    color: #f5a623;
+}
+
+.txt-red {
+    color: #ff2222;
+}
+
+button {
+    display: block;
+    background: white;
+    border-color: white;
+    text-align: center;
+    height: 150px;
+    line-height: 70px;
+    font-size: 45px;
+    text-decoration: none;
+    color: black;
+}
+
+button.cnt3 {
+    bottom: 10px;
+    position: absolute;
+    width: 25%;
+    z-index: 10;
+}
+
+button.cnt3.pos1 {
+    left: 11%;
+}
+
+button.cnt3.pos2 {
+    left: 38%;
+}
+
+button.cnt3.pos3 {
+    left: 65%;
+}
+
+button.cnt4 {
+    bottom: 10px;
+    position: absolute;
+    width: 22%;
+    z-index: 10;
+}
+
+button.cnt4.pos1 {
+    left: 3%;
+}
+
+button.cnt4.pos2 {
+    left: 27%;
+}
+
+button.cnt4.pos3 {
+    left: 51%;
+}
+
+button.cnt4.pos4 {
+    left: 75%;
+}
+
+button.layer1 {
+    bottom: 190px
+}
+
+button.layer2 {
+    bottom: 370px
+}
+
+button.layer3 {
+    bottom: 550px
+}
+
+button.layer4 {
+    bottom: 730px
+}
+
+button.layer5 {
+    bottom: 910px
+}
+
+p {
+    text-align: center;
+    font-size: 60px;
+    margin: 20px
+}
+
+#time {
+    position: absolute;
+    right: 0;
+    top: 0
+}
+
+.autofill {
+    background-color: #aaa
+}
+
+td {
+    line-height: 46px;
+    font-size: 40px;
+    width: 25%
+}
+
+td.tabsmall {
+    font-weight: normal;
+    font-size: 34px;
+    text-align: right;
+    padding-right: 1em
 }
