@@ -56,7 +56,7 @@ function checkOrder(barcode) {
         });
     }).catch((error) => {
         console.error('Error:', error);
-        result.textContent = "Načtený kód " + barcode + " neexistuje v systému.";
+        result.textContent = "Problém v komunikaci se serverem.";
     });
 }
 

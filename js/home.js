@@ -15,16 +15,28 @@ time.addEventListener('time', (e) => {
     document.getElementById("time").innerHTML = e.data;
 }, false);
 
-
-idleInput.addEventListener("click", () => {window.location.replace('/idle_select')})
-idleInput.addEventListener("touchend", () => {window.location.replace('/idle_select')})
-
-cuttingEnd.addEventListener("click", () => {window.location.replace('/entry_pcs')})
-cuttingEnd.addEventListener("touchend", () => {window.location.replace('/entry_pcs')})
-
-userChange.addEventListener("click", () => {window.location.replace('/login')})
-userChange.addEventListener("touchend", () => {window.location.replace('/login')})
-
-userBreak.addEventListener("click", () => {window.location.replace('/login')})
-userBreak.addEventListener("touchend", () => {window.location.replace('/login')})
+idleInput.addEventListener("click", () => {
+    window.location.replace('/idle_select')
+})
+idleInput.addEventListener("touchend", () => {
+    window.location.replace('/idle_select')
+})
+cuttingEnd.addEventListener("click", () => {
+    window.location.replace('/entry_pcs')
+})
+cuttingEnd.addEventListener("touchend", () => {
+    window.location.replace('/entry_pcs')
+})
+userChange.addEventListener("click", () => {
+    window.location.replace('/login')
+})
+userChange.addEventListener("touchend", () => {
+    window.location.replace('/login')
+})
+userBreak.addEventListener("click", () => {
+    window.location.replace('/login')
+})
+userBreak.addEventListener("touchend", () => {
+    window.location.replace('/login')
+})
 

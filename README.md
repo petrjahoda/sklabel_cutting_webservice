@@ -19,13 +19,13 @@
 Go web service for SK Label Cutting Workplaces
 
 ## Todo
-- [x] struktura projektu
-- [x] kontroly na zacatku
-- [x] nacteni zakazky, kontrola
-- [ ] odvadeni kusu
-- [ ] cyklus prestavky
-- [ ] ukonceni rezani
-- [ ] prehozeni obsluhy
+- [x] ~~struktura projektu~~
+- [x] ~~kontroly na zacatku~~
+- [x] ~~nacteni zakazky, kontrola~~
+- [ ] prestavka
+- [ ] zmena obsluhy
+- [ ] nenavaznost obsluhy
+- [ ] konec rezani
 - [ ] procesy na pozadi
 - [ ] otestovani na realnych datech
 
