@@ -79,7 +79,7 @@ Go web service for SK Label Cutting Workplaces
          - current order is closed
          - new order with new user is created
          - home screen is updated with new user
-     - if rfid code does noe exist, user is informed on screen
+     - if rfid code does not exist, user is informed on screen
      
  >![order](screens/user_break.png)
  
