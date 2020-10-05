@@ -58,14 +58,14 @@ func origin(writer http.ResponseWriter, request *http.Request, params httprouter
 }
 
 func checkIfUserIsLoggedForTerminalId(terminalId int) (int, string, bool) {
-	//TODO: check user logging
+	//TODO: check if user is logged in terminal input user (nebo jak)
 	logInfo("Origin", "Checking if user is logged for terminal id: "+strconv.Itoa(terminalId))
 	logInfo("Origin", "User is logged")
 	return 23, "Petr Jahoda", true
 }
 
 func checkIpAddress(ipAddress string) (int, string, bool) {
-	//TODO: check terminal assign
+	//TODO: check assigned terminal to this ip
 	logInfo("Origin", "Checking ip address: "+ipAddress)
 	logInfo("Origin", "Ip address assigned to terminal")
 	return 1, "E235", true

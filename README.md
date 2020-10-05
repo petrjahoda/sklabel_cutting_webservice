@@ -27,6 +27,7 @@ Go web service for SK Label Cutting Workplaces
 - [ ] prestavka  >>>>>>  work-in-progress
 - [ ] konec rezani
 - [ ] procesy na pozadi
+- [ ] zlepseni logovani
 - [ ] vycisteni a zvyseni citelnosti kodu
 - [ ] otestovani na realnych datech
 

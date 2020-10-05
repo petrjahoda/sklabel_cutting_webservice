@@ -77,11 +77,12 @@ func (p *program) Stop(service.Service) error {
 func (p *program) run() {
 	router := httprouter.New()
 	timer := sse.New()
+
+	router.Handler("GET", "/time", timer)
+
 	router.ServeFiles("/js/*filepath", http.Dir("js"))
 	router.ServeFiles("/html/*filepath", http.Dir("html"))
 	router.ServeFiles("/css/*filepath", http.Dir("css"))
-
-	router.Handler("GET", "/time", timer)
 
 	router.GET("/", origin)
 	router.GET("/user_error", userError)
@@ -134,7 +135,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		return
 	}
 	logInfo("End Order", "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
-	//TODO: SaveToZapsi(data)
+	//TODO: EndOrderInZapsi(data)
 	logInfo("End Order", "Ending order in Zapsi finished")
 }
 
@@ -169,7 +170,7 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 func checkUserInSystem(user string) (int, string, bool) {
 	logInfo("Check User In System", "Checking user "+user)
 	logInfo("Check User In System", "Order user ")
-	//TODO: check user
+	//TODO: check user in Zapsi
 	if user == "12345" {
 		return 23, "Brad Pitt", true
 	}
@@ -209,7 +210,7 @@ func startOrder(writer http.ResponseWriter, request *http.Request, params httpro
 		return
 	}
 	logInfo("Start Order", "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
-	//TODO: SaveToZapsi(data)
+	//TODO: StartOrderInZapsi(data)
 	logInfo("Start Order", "Saving order in Zapsi finished")
 }
 
@@ -222,7 +223,7 @@ func saveCode(writer http.ResponseWriter, request *http.Request, params httprout
 		return
 	}
 	logInfo("Save Code", "Saving code "+data.Data)
-	//TODO: SaveToK2(data.Data)
+	//TODO: SaveCodeToK2
 	logInfo("Save Code", "Saving code finished")
 
 }
@@ -254,7 +255,7 @@ func checkOrder(writer http.ResponseWriter, request *http.Request, params httpro
 func checkOrderInSystem(order string) bool {
 	logInfo("Check Order In System", "Checking order "+order)
 	logInfo("Check Order In System", "Order checked ")
-	//TODO: check order
+	//TODO: check order in K2
 	if order == "12345" {
 		return true
 	}
