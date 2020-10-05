@@ -22,14 +22,14 @@ Go web service for SK Label Cutting Workplaces
 - [x] ~~struktura projektu~~
 - [x] ~~kontroly na zacatku~~
 - [x] ~~nacteni zakazky, kontrola~~
+- [x] ~~zmena obsluhy~~
+- [x] ~~nenavaznost obsluhy~~
 - [ ] prestavka
-- [ ] zmena obsluhy
-- [ ] nenavaznost obsluhy
 - [ ] konec rezani
 - [ ] procesy na pozadi
 - [ ] otestovani na realnych datech
 
-## Behavior
+## Initial screens
 1. System first checks request from ip address
     - ip address has assigned deviceId -> OK
     - ip address does not have assigned deviceId -> NOK (screenshot)
@@ -44,7 +44,43 @@ Go web service for SK Label Cutting Workplaces
 >![order](screens/read-code.png)
 >
 >![no-code](screens/no-code.png) 
-4. After successfully scanning the code, main screen is displayed (screenshot)
->![main](screens/main.png) 
+4. After successfully scanning the code, main screen is displayed (screenshot) with 4 buttons
+    - idle button
+    - end order button
+    - user change button
+    - user break button
+    
+>![main](screens/main.png)
+ 
+## User change button
+1. Screen for scanning rfid is displayed (screenshot)
+    - if rfid code exists
+        - current order is closed
+        - K105 is saved to K2
+        - new order with new user is created
+        - home screen is updated with new user (screenshot)
+    - if rfid code does noe exist, user is informed on screen (screenshot)
+    - if button for going back is displayed, user gets back to home screen
+    
+>![order](screens/user_change.png)
+>
+>![home-new](screens/home_new_user.png)
+>
+>![user-error](screens/user_error.png)
+
+## User break button
+ 1. Initial is processed
+    - current order is closed
+    - K219 is saved to K2
+    - 0004 is saved to K2
+    - new order with NO user is created
+ 2. Screen for scanning rfid is displayed (screenshot)
+     - if rfid code exists
+         - current order is closed
+         - new order with new user is created
+         - home screen is updated with new user
+     - if rfid code does noe exist, user is informed on screen
      
+ >![order](screens/user_break.png)
+ 
 © 2020 Petr Jahoda

@@ -15,7 +15,9 @@ type SaveToK2Data struct {
 }
 
 type ResponseData struct {
-	Data string
+	Data     string
+	UserId   int
+	UserName string
 }
 
 type StartOrderData struct {
@@ -76,11 +78,14 @@ func (p *program) run() {
 	router.GET("/home", home)
 	router.GET("/idle_running", idleRunning)
 	router.GET("/idle_select", idleSelect)
-	router.GET("/login", login)
+	router.GET("/user_change", userChange)
+	router.GET("/user_break", userBreak)
 
 	router.POST("/check_order", checkOrder)
+	router.POST("/check_user", checkUser)
 	router.POST("/save_code", saveCode)
 	router.POST("/start_order", startOrder)
+	router.POST("/end_order", endOrder)
 
 	go streamTime(timer)
 	err := http.ListenAndServe(":80", router)
@@ -89,6 +94,75 @@ func (p *program) run() {
 		os.Exit(-1)
 	}
 	logInfo("MAIN", serviceName+" ["+version+"] running")
+}
+
+func endOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("End Order", "Ending order in Zapsi called")
+	var data StartOrderData
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("End Order", err.Error())
+		return
+	}
+	logInfo("End Order", "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
+	//TODO: SaveToZapsi(data)
+	logInfo("End Order", "Ending order in Zapsi finished")
+}
+
+func checkUser(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("Check User", "Checking user called")
+	var data SaveToK2Data
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("Check User", err.Error())
+		return
+	}
+
+	userId, userName, userInSystem := checkUserInSystem(data.Data)
+	var responseData ResponseData
+	if !userInSystem {
+		responseData.Data = "nok"
+		responseData.UserId = userId
+		responseData.UserName = userName
+		writer.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(writer).Encode(responseData)
+		logInfo("Check User", "Checking user finished")
+		return
+	}
+	responseData.Data = "ok"
+	responseData.UserId = userId
+	responseData.UserName = userName
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(responseData)
+	logInfo("Check User", "Checking user finished")
+}
+
+func checkUserInSystem(user string) (int, string, bool) {
+	logInfo("Check User In System", "Checking user "+user)
+	logInfo("Check User In System", "Order user ")
+	//TODO: check user
+	if user == "12345" {
+		return 23, "Brad Pitt", true
+	}
+	return 0, "", false
+}
+
+func userBreak(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	writer.Header().Set("Pragma", "no-cache")
+	writer.Header().Set("Expires", "0")
+	logInfo("User Break", "Page loading...")
+	http.ServeFile(writer, request, "./html/user_break.html")
+	logInfo("User Break", "Page loaded")
+}
+
+func userChange(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+	writer.Header().Set("Pragma", "no-cache")
+	writer.Header().Set("Expires", "0")
+	logInfo("Login", "Page loading...")
+	http.ServeFile(writer, request, "./html/user_change.html")
+	logInfo("Login", "Page loaded")
 }
 
 func startOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
@@ -112,6 +186,7 @@ func saveCode(writer http.ResponseWriter, request *http.Request, params httprout
 		logError("MAIN", err.Error())
 		return
 	}
+	logInfo("Save Code", "Saving code "+data.Data)
 	//TODO: SaveToK2(data.Data)
 	logInfo("Save Code", "Saving code finished")
 

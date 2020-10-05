@@ -3,8 +3,7 @@ const goBack = document.getElementById('goback');
 const result = document.getElementById('result');
 const workplace = document.getElementById("workplace");
 const user = document.getElementById("user");
-let data = ""
-
+let entryData = ""
 sessionStorage.clear()
 sessionStorage.setItem("WorkplaceCode", workplace.textContent)
 sessionStorage.setItem("User", user.textContent)
@@ -15,17 +14,16 @@ time.addEventListener('time', (e) => {
     document.getElementById("time").innerHTML = e.data;
 }, false);
 
-
 window.addEventListener("keyup", function (event) {
-    data = data.replace("Meta", "");
-    data = data.replaceAll("Enter", "");
-    data = data.replaceAll("Shift", "");
-    if (event.key === "Enter" && data.length > 0) {
-        console.log("DATA: " + data)
-        checkOrder(data);
-        data = "";
+    entryData = entryData.replace("Meta", "");
+    entryData = entryData.replaceAll("Enter", "");
+    entryData = entryData.replaceAll("Shift", "");
+    if (event.key === "Enter" && entryData.length > 0) {
+        console.log("DATA: " + entryData)
+        checkOrder(entryData);
+        entryData = "";
     } else {
-        data += event.key;
+        entryData += event.key;
     }
 });
 
@@ -47,40 +45,39 @@ function checkOrder(barcode) {
             let currentResult = myObj.Data;
             if (currentResult === "ok") {
                 sessionStorage.setItem("Order", barcode)
-                saveCodeToK2("K108")
-                startOrderInZapsi(barcode, workplace.dataset.deviceid, user.dataset.userid);
-                window.location.replace('/home');
+                let data = {Data: "K108"};
+                fetch("/save_code", {
+                    method: "POST",
+                    body: JSON.stringify(data)
+                }).then((response) => {
+                    console.log("Saving code to K2 reseponse: " + response.statusText);
+                    let data = {
+                        Order: barcode,
+                        DeviceId: sessionStorage.getItem("DeviceId"),
+                        UserId: sessionStorage.getItem("UserId")
+                    };
+                    fetch("/start_order", {
+                        method: "POST",
+                        body: JSON.stringify(data)
+                    }).then((response) => {
+                        console.log("Starting order in Zapsi response: " + response.statusText);
+                        window.location.replace('/home');
+                    }).catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }).catch((error) => {
+                    console.error('Error:', error);
+                });
+
             } else {
                 result.textContent = "Načtený kód " + barcode + " neexistuje v systému.";
+                setTimeout(() => result.textContent = "Načtěte čárový kód zakázky", 3000)
             }
         });
     }).catch((error) => {
         console.error('Error:', error);
-        result.textContent = "Problém v komunikaci se serverem.";
+        result.textContent = "Načtený kód " + barcode + " neexistuje v systému.";
+        setTimeout(() => result.textContent = "Načtěte čárový kód zakázky", 3000)
     });
 }
 
-function startOrderInZapsi(barcode, deviceid, userid) {
-    let data = {Order: barcode, DeviceId: deviceid, UserId: userid};
-    fetch("/start_order", {
-        method: "POST",
-        body: JSON.stringify(data)
-    }).then((response) => {
-        console.log(response.statusText);
-    }).catch((error) => {
-        console.error('Error:', error);
-    });
-}
-
-
-function saveCodeToK2(code) {
-    let data = {Data: code};
-    fetch("/save_code", {
-        method: "POST",
-        body: JSON.stringify(data)
-    }).then((response) => {
-        console.log(response.statusText);
-    }).catch((error) => {
-        console.error('Error:', error);
-    });
-}

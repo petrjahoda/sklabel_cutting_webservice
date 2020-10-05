@@ -14,6 +14,15 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.4.1.5] - 2020-19-05
+
+### Added
+- screens and behaviot for user change
+- screens and behaviot for user break
+
+### Changed
+- some javascript changes
+
 ## [2020.4.1.2] - 2020-19-02
 
 ### Added
