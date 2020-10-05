@@ -5,8 +5,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/julienschmidt/sse"
 	"github.com/kardianos/service"
+	"html/template"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -24,6 +26,15 @@ type StartOrderData struct {
 	Order    string
 	DeviceId string
 	UserId   string
+}
+
+type Idle struct {
+	Id   int
+	Name string
+}
+
+type Idles struct {
+	Data []Idle
 }
 
 const version = "2020.4.1.2"
@@ -83,6 +94,7 @@ func (p *program) run() {
 
 	router.POST("/check_order", checkOrder)
 	router.POST("/check_user", checkUser)
+	router.POST("/get_idles", getIdles)
 	router.POST("/save_code", saveCode)
 	router.POST("/start_order", startOrder)
 	router.POST("/end_order", endOrder)
@@ -94,6 +106,23 @@ func (p *program) run() {
 		os.Exit(-1)
 	}
 	logInfo("MAIN", serviceName+" ["+version+"] running")
+}
+
+func getIdles(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("Get Idles", "Getting idles called")
+	var idles []Idle
+	for i := 1; i <= 30; i++ {
+		var idle Idle
+		idle.Id = i
+		idle.Name = "Prostoj c. " + strconv.Itoa(i)
+		idles = append(idles, idle)
+	}
+	//TODO: get idles from database
+	var responseData Idles
+	responseData.Data = idles
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(responseData)
+	logInfo("Get Idles User", "Getting idles finished")
 }
 
 func endOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
@@ -152,7 +181,10 @@ func userBreak(writer http.ResponseWriter, request *http.Request, params httprou
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
 	logInfo("User Break", "Page loading...")
-	http.ServeFile(writer, request, "./html/user_break.html")
+	var data HomePageData
+	data.Time = time.Now().Format("15:04:05")
+	tmpl := template.Must(template.ParseFiles("./html/user_break.html"))
+	_ = tmpl.Execute(writer, data)
 	logInfo("User Break", "Page loaded")
 }
 
@@ -161,7 +193,10 @@ func userChange(writer http.ResponseWriter, request *http.Request, params httpro
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
 	logInfo("Login", "Page loading...")
-	http.ServeFile(writer, request, "./html/user_change.html")
+	var data HomePageData
+	data.Time = time.Now().Format("15:04:05")
+	tmpl := template.Must(template.ParseFiles("./html/user_change.html"))
+	_ = tmpl.Execute(writer, data)
 	logInfo("Login", "Page loaded")
 }
 
