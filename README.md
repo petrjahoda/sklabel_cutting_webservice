@@ -24,9 +24,10 @@ Go web service for SK Label Cutting Workplaces
 - [x] ~~nacteni zakazky, kontrola~~
 - [x] ~~zmena obsluhy~~
 - [x] ~~nenavaznost obsluhy~~
-- [ ] prestavka
+- [ ] prestavka  >>>>>>  work-in-progress
 - [ ] konec rezani
 - [ ] procesy na pozadi
+- [ ] vycisteni a zvyseni citelnosti kodu
 - [ ] otestovani na realnych datech
 
 ## Initial screens

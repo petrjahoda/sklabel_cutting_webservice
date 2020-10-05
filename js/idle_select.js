@@ -45,6 +45,7 @@ fetch("/get_idles", {
             if (numberOfIdles <= 12) {
                 document.body.appendChild(btn);
                 btn.addEventListener("click", function (event) {
+                    console.log(btn.dataset.id)
                     //TODO: send K2
                     //TODO: create Idle
                     //TODO: show "idle is running" screen
