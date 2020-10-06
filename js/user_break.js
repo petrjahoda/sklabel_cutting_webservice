@@ -28,7 +28,7 @@ fetch("/end_order", {
                 DeviceId: sessionStorage.getItem("DeviceId"),
                 UserId: sessionStorage.getItem("")
             };
-            fetch("/start_order", {
+            fetch("/create_order", {
                 method: "POST",
                 body: JSON.stringify(data)
             }).then((response) => {
@@ -103,7 +103,7 @@ function checkUser(barcode) {
                         DeviceId: sessionStorage.getItem("DeviceId"),
                         UserId: sessionStorage.getItem("UserId")
                     };
-                    fetch("/start_order", {
+                    fetch("/create_order", {
                         method: "POST",
                         body: JSON.stringify(data)
                     }).then((response) => {

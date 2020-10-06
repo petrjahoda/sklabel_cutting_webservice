@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"gorm.io/driver/mysql"
@@ -129,11 +130,7 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	userIdInt, err := strconv.Atoi(data.UserId)
 	if err != nil {
 		logError(deviceName, "Problem parsing userid "+data.UserId+": "+err.Error())
-		var responseData ZapsiResponseData
-		responseData.Data = "nok"
-		writer.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(writer).Encode(responseData)
-		return
+
 	}
 	deviceIdInt, err := strconv.Atoi(data.DeviceId)
 	if err != nil {
@@ -147,7 +144,6 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	var terminalInputOrder TerminalInputOrder
 	terminalInputOrder.DTS = time.Now()
 	terminalInputOrder.OrderID = order.OID
-	terminalInputOrder.UserID = userIdInt
 	terminalInputOrder.DeviceID = deviceIdInt
 	terminalInputOrder.Interval = 0
 	terminalInputOrder.Count = 0
@@ -156,6 +152,12 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	terminalInputOrder.WorkerCount = 0
 	terminalInputOrder.WorkplaceModeID = 1 //TODO: upravit tady spravne
 	terminalInputOrder.WorkshiftID = actualWorkshiftId
+	if userIdInt != 0 {
+		terminalInputOrder.UserID = sql.NullInt32{
+			Int32: int32(userIdInt),
+			Valid: true,
+		}
+	}
 	db.Save(&terminalInputOrder)
 	var responseData ZapsiResponseData
 	responseData.Data = "ok"
@@ -291,7 +293,6 @@ func checkUserInZapsi(deviceName string, userRfid string) (int, string, bool) {
 }
 
 func endOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	//TODO: EndOrderInZapsi(data)
 	ipAddress := strings.Split(request.Host, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
@@ -300,16 +301,31 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 	logInfo(deviceName, "End order in Zapsi called")
 	var data OrderData
 	err := json.NewDecoder(request.Body).Decode(&data)
+	var responseData ZapsiResponseData
 	if err != nil {
 		logError(deviceName, "Error parsing data from page: "+err.Error())
-		var responseData ZapsiResponseData
 		responseData.Data = "nok"
 		writer.Header().Set("Content-Type", "application/json")
 		return
 	}
 	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
-
-	var responseData ZapsiResponseData
+	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	if err != nil {
+		logError(deviceName, "Problem opening database: "+err.Error())
+		responseData.Data = "nok"
+		writer.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(writer).Encode(responseData)
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	var runningOrder TerminalInputOrder
+	db.Where("DeviceID = ?", data.DeviceId).Where("DTE is NULL").Find(&runningOrder)
+	runningOrder.DTE = sql.NullTime{
+		Time:  time.Now(),
+		Valid: true,
+	}
+	runningOrder.Interval = float32(time.Since(runningOrder.DTS).Minutes())
+	db.Save(&runningOrder)
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
@@ -348,7 +364,6 @@ func getIdles(writer http.ResponseWriter, request *http.Request, params httprout
 }
 
 func endIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	//TODO: ENdIdleInZapsi(data)
 	ipAddress := strings.Split(request.Host, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
@@ -362,7 +377,20 @@ func endIdle(writer http.ResponseWriter, request *http.Request, params httproute
 		return
 	}
 	logInfo(deviceName, "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
-
+	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	if err != nil {
+		logError("MAIN", "Problem opening database: "+err.Error())
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	var runningIdle TerminalInputIdle
+	db.Where("IdleID = ?", data.IdleId).Where("UserID = ? ", data.UserId).Where("DeviceID = ?", data.DeviceId).Where("DTE is NULL").Find(&runningIdle)
+	runningIdle.DTE = sql.NullTime{
+		Time:  time.Now(),
+		Valid: true,
+	}
+	runningIdle.Interval = float32(time.Since(runningIdle.DTS).Minutes())
+	db.Save(&runningIdle)
 	var responseData ZapsiResponseData
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
@@ -371,7 +399,6 @@ func endIdle(writer http.ResponseWriter, request *http.Request, params httproute
 }
 
 func createIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	//TODO: StartIdleInZapsi(data)
 	ipAddress := strings.Split(request.Host, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {

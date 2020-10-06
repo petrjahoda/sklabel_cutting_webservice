@@ -43,14 +43,14 @@ func (Idle) TableName() string {
 }
 
 type TerminalInputIdle struct {
-	OID      int       `gorm:"primary_key;column:OID"`
-	DTS      time.Time `gorm:"column:DTS"`
-	DTE      time.Time `gorm:"column:DTE"`
-	IdleID   int       `gorm:"column:IdleID"`
-	UserID   int       `gorm:"column:UserID"`
-	Interval float32   `gorm:"column:Interval"`
-	DeviceID int       `gorm:"column:DeviceID"`
-	Note     string    `gorm:"column:Note"`
+	OID      int          `gorm:"primary_key;column:OID"`
+	DTS      time.Time    `gorm:"column:DTS"`
+	DTE      sql.NullTime `gorm:"column:DTE"`
+	IdleID   int          `gorm:"column:IdleID"`
+	UserID   int          `gorm:"column:UserID"`
+	Interval float32      `gorm:"column:Interval"`
+	DeviceID int          `gorm:"column:DeviceID"`
+	Note     string       `gorm:"column:Note"`
 }
 
 func (TerminalInputIdle) TableName() string {
@@ -72,20 +72,21 @@ func (TerminalInputLogin) TableName() string {
 }
 
 type TerminalInputOrder struct {
-	OID             int       `gorm:"primary_key;column:OID"`
-	DTS             time.Time `gorm:"column:DTS"`
-	DTE             time.Time `gorm:"column:DTE"`
-	OrderID         int       `gorm:"column:OrderID"`
-	UserID          int       `gorm:"column:UserID"`
-	DeviceID        int       `gorm:"column:DeviceID"`
-	Interval        float32   `gorm:"column:Interval"`
-	Count           int       `gorm:"column:Count"`
-	Fail            int       `gorm:"column:Fail"`
-	AverageCycle    float32   `gorm:"column:AverageCycle"`
-	WorkerCount     int       `gorm:"column:WorkerCount"`
-	WorkplaceModeID int       `gorm:"column:WorkplaceModeID"`
-	Note            string    `gorm:"column:Note"`
-	WorkshiftID     int       `gorm:"column:WorkshiftID"`
+	OID             int           `gorm:"primary_key;column:OID"`
+	DTS             time.Time     `gorm:"column:DTS"`
+	DTE             sql.NullTime  `gorm:"column:DTE"`
+	OrderID         int           `gorm:"column:OrderID"`
+	UserID          sql.NullInt32 `gorm:"column:UserID"`
+	DeviceID        int           `gorm:"column:DeviceID"`
+	Interval        float32       `gorm:"column:Interval"`
+	Count           int           `gorm:"column:Count"`
+	Fail            int           `gorm:"column:Fail"`
+	AverageCycle    float32       `gorm:"column:AverageCycle"`
+	WorkerCount     int           `gorm:"column:WorkerCount"`
+	WorkplaceModeID int           `gorm:"column:WorkplaceModeID"`
+	Note            string        `gorm:"column:Note"`
+	WorkshiftID     int           `gorm:"column:WorkshiftID"`
+	Cavity          int           `gorm:"column:Cavity"`
 }
 
 func (TerminalInputOrder) TableName() string {

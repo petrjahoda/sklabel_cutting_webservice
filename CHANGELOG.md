@@ -25,6 +25,8 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 - creating idle in zapsi database
 - getting idles from zapsi database
 - checking user in zapsi database
+- closing order in zapsi database
+- closing idle in zapsi database
 
 
 ### Changed
