@@ -26,8 +26,8 @@ Go web service for SK Label Cutting Workplaces
 - [x] ~~nenavaznost obsluhy~~
 - [x] ~~prestavka~~
 - [x] ~~konec rezani~~
-- [ ] vycisteni a zvyseni citelnosti kodu
-- [ ] zlepseni logovani
+- [x] ~~vycisteni a zvyseni citelnosti kodu~~
+- [x] ~~zlepseni logovani~~
 - [ ] procesy na pozadi
 - [ ] otestovani na realnych datech
 
