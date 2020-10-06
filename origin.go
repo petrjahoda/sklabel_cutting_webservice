@@ -20,7 +20,7 @@ type OriginPage struct {
 	Information string
 }
 
-func origin(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func origin(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
 	logInfo("Origin", "Page loading...")
 	ipAddress := strings.Split(request.Host, ":")
 	terminalId, workplaceCode, ipAddressHasAssignedTerminal := checkIpAddress(ipAddress[0])
@@ -55,18 +55,4 @@ func origin(writer http.ResponseWriter, request *http.Request, params httprouter
 	logInfo("Origin", "Page loaded")
 	return
 
-}
-
-func checkIfUserIsLoggedForTerminalId(terminalId int) (int, string, bool) {
-	//TODO: check if user is logged in terminal input user (nebo jak)
-	logInfo("Origin", "Checking if user is logged for terminal id: "+strconv.Itoa(terminalId))
-	logInfo("Origin", "User is logged")
-	return 23, "Petr Jahoda", true
-}
-
-func checkIpAddress(ipAddress string) (int, string, bool) {
-	//TODO: check assigned terminal to this ip
-	logInfo("Origin", "Checking ip address: "+ipAddress)
-	logInfo("Origin", "Ip address assigned to terminal")
-	return 1, "E235", true
 }

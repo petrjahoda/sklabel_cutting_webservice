@@ -20,6 +20,17 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 - screens and behavior for idles
 - screens and behavior for end cutting
 
+### Changed
+- proper html formatting
+- proper js formatting
+- move go code to proper files
+    - main.go contains code for web service
+    - zapsi.go contains code for communicating with zapsi database
+    - k2.go contains code for communicating with k2 database
+    - log.go contains code for logging
+    - pages.go contains code for pages loading
+    - origin.go contains code for initial checking
+
 ## [2020.4.1.5] - 2020-19-05
 
 ### Added
