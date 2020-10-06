@@ -28,7 +28,7 @@ Go web service for SK Label Cutting Workplaces
 - [x] ~~konec rezani~~
 - [x] ~~vycisteni a zvyseni citelnosti kodu~~
 - [x] ~~zlepseni logovani~~
-- [ ] procesy na pozadi zapsi >>>>> work-in-progress
+- [x] ~~procesy na pozadi zapsi~~
 - [ ] procesy na pozadi k2
 - [ ] otestovani na realnych datech
 
