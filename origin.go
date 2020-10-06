@@ -21,9 +21,13 @@ type OriginPage struct {
 }
 
 func origin(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	logInfo("Origin", "Page loading...")
 	ipAddress := strings.Split(request.Host, ":")
-	terminalId, workplaceCode, ipAddressHasAssignedTerminal := checkIpAddress(ipAddress[0])
+	deviceName := devicesMap[ipAddress[0]]
+	if len(deviceName) == 0 {
+		deviceName = ipAddress[0]
+	}
+	logInfo(deviceName, "Checking initial conditions")
+	terminalId, workplaceCode, ipAddressHasAssignedTerminal := checkIpAddress(deviceName, ipAddress[0])
 	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
@@ -32,16 +36,16 @@ func origin(writer http.ResponseWriter, request *http.Request, _ httprouter.Para
 		data.Information = "Ip adresa " + ipAddress[0] + " nemá přiřazeno žádné pracoviště."
 		tmpl := template.Must(template.ParseFiles("./html/origin.html"))
 		_ = tmpl.Execute(writer, data)
-		logInfo("Origin", "Page loaded")
+		logInfo(deviceName, "Checking ended, ip address not assigned")
 		return
 	}
-	userId, user, userIsLogged := checkIfUserIsLoggedForTerminalId(terminalId)
+	userId, user, userIsLogged := checkIfUserIsLoggedForTerminalId(deviceName, terminalId)
 	if !userIsLogged {
 		var data OriginPage
 		data.Information = "Na pracovišti není přihlášen žádný operátor"
 		tmpl := template.Must(template.ParseFiles("./html/origin.html"))
 		_ = tmpl.Execute(writer, data)
-		logInfo("Origin", "Page loaded")
+		logInfo(deviceName, "Checking ended, user not assigned")
 		return
 	}
 	var data OrderScanningPage
@@ -52,7 +56,7 @@ func origin(writer http.ResponseWriter, request *http.Request, _ httprouter.Para
 	data.UserId = strconv.Itoa(userId)
 	tmpl := template.Must(template.ParseFiles("./html/order_scanning.html"))
 	_ = tmpl.Execute(writer, data)
-	logInfo("Origin", "Page loaded")
+	logInfo(deviceName, "Checking ended, everything OK")
 	return
 
 }

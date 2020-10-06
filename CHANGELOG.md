@@ -30,6 +30,9 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
     - log.go contains code for logging
     - pages.go contains code for pages loading
     - origin.go contains code for initial checking
+- updated logging
+    - one goroutine periodically checks for [ipaddress+device name] from zapsi database
+    - when logging is called, device name is displayed like this ```[CNC1] --INF-- Saving data to K2```
 
 ## [2020.4.1.5] - 2020-19-05
 

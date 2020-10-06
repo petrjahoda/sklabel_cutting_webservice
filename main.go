@@ -15,6 +15,8 @@ const serviceDescription = "Web Service for terminals for cutting workplaces"
 const zapsiDatabaseConnection = "user=postgres password=Zps05..... dbname=version3 host=database port=5432 sslmode=disable"
 const skLabelDatabaseConnection = "user=postgres password=Zps05..... dbname=version3 host=database port=5432 sslmode=disable"
 
+var devicesMap map[string]string
+
 type program struct{}
 
 func (p *program) Start(service.Service) error {
@@ -60,16 +62,17 @@ func (p *program) run() {
 	router.GET("/idle_select", idleSelect)
 	router.GET("/user_change", userChange)
 	router.GET("/user_break", userBreak)
-	router.POST("/check_order", checkOrder)
+	router.POST("/check_order", checkOrderInK2)
 	router.POST("/check_user", checkUser)
 	router.POST("/get_idles", getIdles)
-	router.POST("/save_code", saveCode)
-	router.POST("/get_k2Pcs", getK2Pcs)
+	router.POST("/save_code", saveDataToK2)
+	router.POST("/get_k2Pcs", getPcsFromK2)
 	router.POST("/start_order", startOrder)
 	router.POST("/start_idle", startIdle)
 	router.POST("/end_idle", endIdle)
 	router.POST("/end_order", endOrder)
 	go streamTime(timer)
+	go updateDeviceMap()
 	err := http.ListenAndServe(":80", router)
 	if err != nil {
 		logError("MAIN", "Problem starting service: "+err.Error())
@@ -78,8 +81,19 @@ func (p *program) run() {
 	logInfo("MAIN", serviceName+" ["+version+"] running")
 }
 
+func updateDeviceMap() {
+	devicesMap = make(map[string]string)
+	for {
+		//TODO: Download devices from Zapsi
+		devicesMap["localhosta"] = "testovaci pracoviste"
+		devicesMap["192.168.23.33"] = "cnc 1"
+		devicesMap["192.168.23.32"] = "cnc 2"
+		time.Sleep(60 * time.Second)
+	}
+}
+
 func streamTime(streamer *sse.Streamer) {
-	logInfo("SSE", "Streaming time process started")
+	logInfo("MAIN", "Streaming time process started")
 	for {
 		streamer.SendString("", "time", time.Now().Format("15:04:05"))
 		time.Sleep(1 * time.Second)

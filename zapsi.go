@@ -5,6 +5,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type ZapsiResponseData struct {
@@ -26,56 +27,66 @@ type Idles struct {
 	Data []Idle
 }
 
-type StartOrderData struct {
+type OrderData struct {
 	Order    string
 	DeviceId string
 	UserId   string
 }
 
-type StartIdleData struct {
+type IdleData struct {
 	Order    string
 	IdleId   string
 	DeviceId string
 	UserId   string
 }
 
-func checkIfUserIsLoggedForTerminalId(terminalId int) (int, string, bool) {
+func checkIfUserIsLoggedForTerminalId(deviceName string, terminalId int) (int, string, bool) {
 	//TODO: check if user is logged in terminal input user (nebo jak)
-	logInfo("Origin", "Checking if user is logged for terminal id: "+strconv.Itoa(terminalId))
-	logInfo("Origin", "User is logged")
+	logInfo(deviceName, "Checking if user is logged for terminal id: "+strconv.Itoa(terminalId))
+	logInfo(deviceName, "User is logged")
 	return 23, "Petr Jahoda", true
 }
 
-func checkIpAddress(ipAddress string) (int, string, bool) {
+func checkIpAddress(deviceName string, ipAddress string) (int, string, bool) {
 	//TODO: check assigned terminal to this ip
-	logInfo("Origin", "Checking ip address: "+ipAddress)
-	logInfo("Origin", "Ip address assigned to terminal")
+	logInfo(deviceName, "Checking ip address: "+ipAddress)
+	logInfo(deviceName, "Ip address assigned to terminal")
 	return 1, "E235", true
 }
 
 func startOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	logInfo("Start Order", "Saving order in Zapsi called")
-	var data StartOrderData
+	ipAddress := strings.Split(request.Host, ":")
+	deviceName := devicesMap[ipAddress[0]]
+	if len(deviceName) == 0 {
+		deviceName = ipAddress[0]
+	}
+	logInfo(deviceName, "Save order in Zapsi called")
+	var data OrderData
 	err := json.NewDecoder(request.Body).Decode(&data)
 	if err != nil {
 		logError("MAIN", err.Error())
 		return
 	}
-	logInfo("Start Order", "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
 	//TODO: StartOrderInZapsi(data)
-	logInfo("Start Order", "Saving order in Zapsi finished")
+	logInfo(deviceName, "Save order in Zapsi finished, everything ok")
 }
 
 func checkUser(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	logInfo("Check User", "Checking user called")
+	ipAddress := strings.Split(request.Host, ":")
+	deviceName := devicesMap[ipAddress[0]]
+	if len(deviceName) == 0 {
+		deviceName = ipAddress[0]
+	}
+	logInfo(deviceName, "Check user in Zapsi called")
 	var data ZapsiData
 	err := json.NewDecoder(request.Body).Decode(&data)
 	if err != nil {
-		logError("Check User", err.Error())
+		logError(deviceName, "Error parsing data from page: "+err.Error())
 		return
 	}
 
-	userId, userName, userInSystem := checkUserInSystem(data.Data)
+	userId, userName, userInSystem := checkUserInSystem(deviceName, data.Data)
 	var responseData ZapsiResponseData
 	if !userInSystem {
 		responseData.Data = "nok"
@@ -83,7 +94,7 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 		responseData.UserName = userName
 		writer.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(writer).Encode(responseData)
-		logInfo("Check User", "Checking user finished")
+		logInfo(deviceName, "Check user finished, user not in system")
 		return
 	}
 	responseData.Data = "ok"
@@ -91,12 +102,11 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 	responseData.UserName = userName
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
-	logInfo("Check User", "Checking user finished")
+	logInfo(deviceName, "Check user finished, everything ok")
 }
 
-func checkUserInSystem(user string) (int, string, bool) {
-	logInfo("Check User In System", "Checking user "+user)
-	logInfo("Check User In System", "Order user ")
+func checkUserInSystem(deviceName string, user string) (int, string, bool) {
+	logInfo(deviceName, "Checking user "+user)
 	//TODO: check user in Zapsi
 	if user == "12345" {
 		return 23, "Brad Pitt", true
@@ -105,20 +115,34 @@ func checkUserInSystem(user string) (int, string, bool) {
 }
 
 func endOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	logInfo("End Order", "Ending order in Zapsi called")
-	var data StartOrderData
+	ipAddress := strings.Split(request.Host, ":")
+	deviceName := devicesMap[ipAddress[0]]
+	if len(deviceName) == 0 {
+		deviceName = ipAddress[0]
+	}
+	logInfo(deviceName, "End order in Zapsi called")
+	var data OrderData
 	err := json.NewDecoder(request.Body).Decode(&data)
 	if err != nil {
-		logError("End Order", err.Error())
+		logError(deviceName, "Error parsing data from page: "+err.Error())
 		return
 	}
-	logInfo("End Order", "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
 	//TODO: EndOrderInZapsi(data)
-	logInfo("End Order", "Ending order in Zapsi finished")
+	var responseData ZapsiResponseData
+	responseData.Data = "ok"
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(responseData)
+	logInfo(deviceName, "End order in Zapsi finished, everything ok")
 }
 
 func getIdles(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	logInfo("Get Idles", "Getting idles called")
+	ipAddress := strings.Split(request.Host, ":")
+	deviceName := devicesMap[ipAddress[0]]
+	if len(deviceName) == 0 {
+		deviceName = ipAddress[0]
+	}
+	logInfo(deviceName, "Get idles from Zapsi called")
 	var idles []Idle
 	for i := 1; i <= 30; i++ {
 		var idle Idle
@@ -131,31 +155,49 @@ func getIdles(writer http.ResponseWriter, request *http.Request, params httprout
 	responseData.Data = idles
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
-	logInfo("Get Idles User", "Getting idles finished")
+	logInfo(deviceName, "Get idles from Zapsi finished, everything ok")
 }
 
 func endIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	logInfo("End Idle", "Ending idle in Zapsi called")
-	var data StartIdleData
+	ipAddress := strings.Split(request.Host, ":")
+	deviceName := devicesMap[ipAddress[0]]
+	if len(deviceName) == 0 {
+		deviceName = ipAddress[0]
+	}
+	logInfo(deviceName, "End idle in Zapsi called")
+	var data IdleData
 	err := json.NewDecoder(request.Body).Decode(&data)
 	if err != nil {
-		logError("End Idle", err.Error())
+		logError(deviceName, "Error parsing data from page: "+err.Error())
 		return
 	}
-	logInfo("End Idle", "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
 	//TODO: ENdIdleInZapsi(data)
-	logInfo("End Idle", "Ending idle in Zapsi finished")
+	var responseData ZapsiResponseData
+	responseData.Data = "ok"
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(responseData)
+	logInfo(deviceName, "End idle in Zapsi finished, everything ok")
 }
 
 func startIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	logInfo("Start Idle", "Saving idle in Zapsi called")
-	var data StartIdleData
+	ipAddress := strings.Split(request.Host, ":")
+	deviceName := devicesMap[ipAddress[0]]
+	if len(deviceName) == 0 {
+		deviceName = ipAddress[0]
+	}
+	logInfo(deviceName, "Start idle in Zapsi called")
+	var data IdleData
 	err := json.NewDecoder(request.Body).Decode(&data)
 	if err != nil {
-		logError("Start Idle", err.Error())
+		logError(deviceName, "Error parsing data from page: "+err.Error())
 		return
 	}
-	logInfo("Start Idle", "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
 	//TODO: StartIdleInZapsi(data)
-	logInfo("Start Idle", "Saving idle in Zapsi finished")
+	var responseData ZapsiResponseData
+	responseData.Data = "ok"
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(responseData)
+	logInfo(deviceName, "Start idle in Zapsi finished, everything ok")
 }
