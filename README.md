@@ -24,11 +24,11 @@ Go web service for SK Label Cutting Workplaces
 - [x] ~~nacteni zakazky, kontrola~~
 - [x] ~~zmena obsluhy~~
 - [x] ~~nenavaznost obsluhy~~
-- [ ] prestavka  >>>>>>  work-in-progress
-- [ ] konec rezani
-- [ ] procesy na pozadi
-- [ ] zlepseni logovani
+- [x] ~~prestavka~~
+- [x] ~~konec rezani~~
 - [ ] vycisteni a zvyseni citelnosti kodu
+- [ ] zlepseni logovani
+- [ ] procesy na pozadi
 - [ ] otestovani na realnych datech
 
 ## Initial screens
@@ -84,5 +84,29 @@ Go web service for SK Label Cutting Workplaces
      - if rfid code does not exist, user is informed on screen
      
  >![order](screens/user_break.png)
- 
+
+## Idle button
+1. Screen(s) for choosing idle is selected 
+2. After idle is selected
+    - K219 is saved to K2
+    - idle code is saved to K2
+    - idle is created in Zapsi
+    - new screen is displayed
+3. After end button is selected
+    - K119 is saved to K2
+    - idle is closed in Zapsi
+    - home screen is displayed again 
+>![idleSelect](screens/idle-select.png) 
+>
+>![idleRunning](screens/idle-running.png) 
+
+## Cutting end button
+1. Screen(s) for adding number of pcs is displayed 
+2. After ok button is selected
+    - K302 is saved to K2
+    - proper amount is saved to K2
+    - order is closed in Zapsi
+    - original link is opened in format ```http://localhost:81/terminal/www/default/{DeviceId}```
+>![cuttingEnd](screens/cutting-end.png)   
+    
 © 2020 Petr Jahoda

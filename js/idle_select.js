@@ -15,6 +15,7 @@ time.addEventListener('time', (e) => {
     document.getElementById("time").innerHTML = e.data;
 }, false);
 
+
 fetch("/get_idles", {
     method: "POST",
 
@@ -45,13 +46,10 @@ fetch("/get_idles", {
             if (numberOfIdles <= 12) {
                 document.body.appendChild(btn);
                 btn.addEventListener("click", function (event) {
-                    console.log(btn.dataset.id)
-                    //TODO: send K2
-                    //TODO: create Idle
-                    //TODO: show "idle is running" screen
+                    ProcessIdleStart(btn);
                 });
-                btn.addEventListener("touchend", function(event) {
-
+                btn.addEventListener("touchend", function (event) {
+                    ProcessIdleStart(btn);
                 });
             } else {
                 next.style.display = "block";
@@ -98,8 +96,12 @@ function showPrevious() {
         }
         if (numberOfIdles > 12 * (actualPage - 1) && numberOfIdles <= (12 * (actualPage))) {
             document.body.appendChild(btn);
-            // btn.addEventListener("click", idleSelected(this));
-            // btn.addEventListener("touch", idleSelected(this));
+            btn.addEventListener("click", function (event) {
+                ProcessIdleStart(btn);
+            });
+            btn.addEventListener("touchend", function (event) {
+                ProcessIdleStart(btn);
+            });
         }
         if (numberOfIdles < (12 * actualPage)) {
             next.style.display = "none"
@@ -112,9 +114,6 @@ function showPrevious() {
     });
 }
 
-// function idleSelected() {
-//     console.log()
-// }
 
 function showNext() {
     previous.style.display = "block"
@@ -150,14 +149,48 @@ function showNext() {
         }
         if (numberOfIdles > 12 * (actualPage - 1) && numberOfIdles <= (12 * (actualPage))) {
             document.body.appendChild(btn);
-            // btn.addEventListener("click", idleSelected(this));
-            // btn.addEventListener("touch", idleSelected(this));
+            btn.addEventListener("click", function (event) {
+                ProcessIdleStart(btn);
+            });
+            btn.addEventListener("touchend", function (event) {
+                ProcessIdleStart(btn);
+            });
         }
         if (numberOfIdles > (12 * actualPage)) {
             next.style.display = "block"
         } else {
             next.style.display = "none"
         }
+    });
+}
+
+function ProcessIdleStart(btn) {
+    let data = {Data: "K219"};
+    fetch("/save_code", {
+        method: "POST",
+        body: JSON.stringify(data)
+    }).then((response) => {
+        console.log("Saving code to K2 response: " + response.statusText);
+        let data = {
+            Order: sessionStorage.getItem("Order"),
+            IdleId: btn.dataset.id,
+            DeviceId: sessionStorage.getItem("DeviceId"),
+            UserId: sessionStorage.getItem("UserId")
+        };
+        fetch("/start_idle", {
+            method: "POST",
+            body: JSON.stringify(data)
+        }).then((response) => {
+            console.log("Starting idle in Zapsi response: " + response.statusText);
+            sessionStorage.setItem("IdleId", btn.dataset.id)
+            sessionStorage.setItem("Idle", btn.textContent)
+            window.location.replace('/idle_running');
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+
+    }).catch((error) => {
+        console.error('Error:', error);
     });
 }
 

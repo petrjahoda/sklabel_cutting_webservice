@@ -28,6 +28,13 @@ type StartOrderData struct {
 	UserId   string
 }
 
+type StartIdleData struct {
+	Order    string
+	IdleId   string
+	DeviceId string
+	UserId   string
+}
+
 type Idle struct {
 	Id   int
 	Name string
@@ -86,7 +93,7 @@ func (p *program) run() {
 
 	router.GET("/", origin)
 	router.GET("/user_error", userError)
-	router.GET("/entry_pcs", entryPcs)
+	router.GET("/cutting_end", cuttingEnd)
 	router.GET("/home", home)
 	router.GET("/idle_running", idleRunning)
 	router.GET("/idle_select", idleSelect)
@@ -97,7 +104,10 @@ func (p *program) run() {
 	router.POST("/check_user", checkUser)
 	router.POST("/get_idles", getIdles)
 	router.POST("/save_code", saveCode)
+	router.POST("/get_k2Pcs", getK2Pcs)
 	router.POST("/start_order", startOrder)
+	router.POST("/start_idle", startIdle)
+	router.POST("/end_idle", endIdle)
 	router.POST("/end_order", endOrder)
 
 	go streamTime(timer)
@@ -107,6 +117,49 @@ func (p *program) run() {
 		os.Exit(-1)
 	}
 	logInfo("MAIN", serviceName+" ["+version+"] running")
+}
+
+func getK2Pcs(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("Get K2 Pcs", "Getting K2 pcs called")
+	var data SaveToK2Data
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("Get K2 Pcs", err.Error())
+		return
+	}
+	logInfo("Get K2 Pcs", "Getting K2 pcs for order "+data.Data)
+	//TODO: Get Pcs from K2
+	var responseData ResponseData
+	responseData.Data = "23"
+	writer.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(writer).Encode(responseData)
+	logInfo("Get K2 Pcs", "Getting K2 pcs finished")
+}
+
+func endIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("End Idle", "Ending idle in Zapsi called")
+	var data StartIdleData
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("End Idle", err.Error())
+		return
+	}
+	logInfo("End Idle", "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
+	//TODO: ENdIdleInZapsi(data)
+	logInfo("End Idle", "Ending idle in Zapsi finished")
+}
+
+func startIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	logInfo("Start Idle", "Saving idle in Zapsi called")
+	var data StartIdleData
+	err := json.NewDecoder(request.Body).Decode(&data)
+	if err != nil {
+		logError("Start Idle", err.Error())
+		return
+	}
+	logInfo("Start Idle", "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
+	//TODO: StartIdleInZapsi(data)
+	logInfo("Start Idle", "Saving idle in Zapsi finished")
 }
 
 func getIdles(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {

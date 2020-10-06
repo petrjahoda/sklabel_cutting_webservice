@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entry Pcs</title>
+</head>
+<link rel="stylesheet" href="/css/terminal.css">
+<script src="/js/cutting_end.js" defer></script>
+<body>
+<span id='time'>{{.Time}}</span>
+<div style="height: 4%;text-align: center">
+    <p style="text-align:left;margin-left:11%;width:79%;font-size: 50px"><span style="display:inline-block;width:70%;">Požadované množství:</span>&nbsp;
+        <span style="display:inline-block;width:20%;text-align: right" id="k2Pcs"></span>&nbsp;</p>
+</div>
+<div style="height: 4%;text-align: center">
+    <p style="text-align:left;margin-left:11%;width:79%;font-size: 50px"><span style="display:inline-block;width:70%;">Zadejte skutečné vyrobené množství:</span>&nbsp;
+        <span style="display:inline-block;width:20%;text-align: right"><span id="enteredPcs"></span></span>&nbsp;
+    </p>
+</div>
+<div class="keypad">
+    <button class="layer4 cnt3 pos1" id="1">1</button>
+    <button class="layer4 cnt3 pos2" id="2">2</button>
+    <button class="layer4 cnt3 pos3" id="3">3</button>
+    <button class="layer3 cnt3 pos1" id="4">4</button>
+    <button class="layer3 cnt3 pos2" id="5">5</button>
+    <button class="layer3 cnt3 pos3" id="6">6</button>
+    <button class="layer2 cnt3 pos1" id="7">7</button>
+    <button class="layer2 cnt3 pos2" id="8">8</button>
+    <button class="layer2 cnt3 pos3" id="9">9</button>
+    <button class="layer1 cnt3 pos1 red" id="del">DEL</button>
+    <button class="layer1 cnt3 pos2" id="0">0</button>
+    <a href="home">
+        <button class="button pos1 cnt3">Zpět</button>
+    </a>
+    <button class="pos3 cnt3" id="ok">OK</button>
+</div>
+</body>
+</html>
