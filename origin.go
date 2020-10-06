@@ -45,7 +45,7 @@ func origin(writer http.ResponseWriter, request *http.Request, _ httprouter.Para
 		data.Information = "Na pracovišti není přihlášen žádný operátor"
 		tmpl := template.Must(template.ParseFiles("./html/origin.html"))
 		_ = tmpl.Execute(writer, data)
-		logInfo(deviceName, "Checking ended, user not assigned")
+		logInfo(deviceName, "Checking ended, user not logged")
 		return
 	}
 	var data OrderScanningPage

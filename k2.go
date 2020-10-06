@@ -17,6 +17,15 @@ type SaveToK2Data struct {
 	Data string
 }
 
+func checkUserInK2(deviceName string, user string) (int, string, bool) {
+	logInfo(deviceName, "Checking user "+user)
+	//TODO: check user in Zapsi
+	if user == "12345" {
+		return 23, "Brad Pitt", true
+	}
+	return 0, "", false
+}
+
 func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
 	ipAddress := strings.Split(request.Host, ":")
 	deviceName := devicesMap[ipAddress[0]]

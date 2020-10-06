@@ -19,6 +19,10 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 ### Added
 - screens and behavior for idles
 - screens and behavior for end cutting
+- checking device in zapsi database
+- checking logged user in zapsi database
+- creating order in zapsi database
+- getting idles from zapsi database
 
 ### Changed
 - proper html formatting

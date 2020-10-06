@@ -50,13 +50,13 @@ function checkOrder(barcode) {
                     method: "POST",
                     body: JSON.stringify(data)
                 }).then((response) => {
-                    console.log("Saving code to K2 reseponse: " + response.statusText);
+                    console.log("Saving code to K2 response: " + response.statusText);
                     let data = {
                         Order: barcode,
                         DeviceId: sessionStorage.getItem("DeviceId"),
                         UserId: sessionStorage.getItem("UserId")
                     };
-                    fetch("/start_order", {
+                    fetch("/create_order", {
                         method: "POST",
                         body: JSON.stringify(data)
                     }).then((response) => {

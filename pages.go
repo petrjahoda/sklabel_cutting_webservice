@@ -60,7 +60,7 @@ func idleSelect(writer http.ResponseWriter, request *http.Request, _ httprouter.
 	writer.Header().Set("Expires", "0")
 	tmpl := template.Must(template.ParseFiles("./html/idle_select.html"))
 	_ = tmpl.Execute(writer, data)
-	logInfo(deviceName, "Idle select page sent")
+	logInfo(deviceName, "DataIdle select page sent")
 
 }
 
@@ -78,7 +78,7 @@ func idleRunning(writer http.ResponseWriter, request *http.Request, _ httprouter
 	writer.Header().Set("Expires", "0")
 	tmpl := template.Must(template.ParseFiles("./html/idle_running.html"))
 	_ = tmpl.Execute(writer, data)
-	logInfo(deviceName, "Idle running page sent")
+	logInfo(deviceName, "DataIdle running page sent")
 
 }
 

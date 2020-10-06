@@ -34,10 +34,10 @@ Go web service for SK Label Cutting Workplaces
 
 ## Initial screens
 1. System first checks request from ip address
-    - ip address has assigned deviceId -> OK
-    - ip address does not have assigned deviceId -> NOK (screenshot)
+    - ip address has assigned deviceId in ```device``` table -> OK
+    - ip address does not have assigned deviceId in ```device``` table -> NOK (screenshot)
 >![ipaddress_error](screens/no-ip.png)
-2. System then checks if workplace has any user logged
+2. System then checks if workplace has any user ```logged in terminal_input_login``` table
     - user is logged -> OK
     - user is not logged -> NOK (screenshot)
 >![user_error](screens/no-user.png)

@@ -12,7 +12,7 @@ import (
 const version = "2020.4.1.2"
 const serviceName = "SK Label Cutting Webservice"
 const serviceDescription = "Web Service for terminals for cutting workplaces"
-const zapsiDatabaseConnection = "user=postgres password=Zps05..... dbname=version3 host=database port=5432 sslmode=disable"
+const zapsiDatabaseConnection = "zapsi_uzivatel:zapsi@tcp(localhost:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
 const skLabelDatabaseConnection = "user=postgres password=Zps05..... dbname=version3 host=database port=5432 sslmode=disable"
 
 var devicesMap map[string]string
@@ -67,13 +67,13 @@ func (p *program) run() {
 	router.POST("/get_idles", getIdles)
 	router.POST("/save_code", saveDataToK2)
 	router.POST("/get_k2Pcs", getPcsFromK2)
-	router.POST("/start_order", startOrder)
+	router.POST("/create_order", createOrder)
 	router.POST("/start_idle", startIdle)
 	router.POST("/end_idle", endIdle)
 	router.POST("/end_order", endOrder)
 	go streamTime(timer)
 	go updateDeviceMap()
-	err := http.ListenAndServe(":80", router)
+	err := http.ListenAndServe(":82", router)
 	if err != nil {
 		logError("MAIN", "Problem starting service: "+err.Error())
 		os.Exit(-1)
