@@ -4,6 +4,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/julienschmidt/sse"
 	"github.com/kardianos/service"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"net/http"
 	"os"
 	"time"
@@ -51,10 +53,13 @@ func main() {
 func (p *program) run() {
 	router := httprouter.New()
 	timer := sse.New()
+
 	router.Handler("GET", "/time", timer)
+
 	router.ServeFiles("/js/*filepath", http.Dir("js"))
 	router.ServeFiles("/html/*filepath", http.Dir("html"))
 	router.ServeFiles("/css/*filepath", http.Dir("css"))
+
 	router.GET("/", origin)
 	router.GET("/cutting_end", cuttingEnd)
 	router.GET("/home", home)
@@ -62,13 +67,14 @@ func (p *program) run() {
 	router.GET("/idle_select", idleSelect)
 	router.GET("/user_change", userChange)
 	router.GET("/user_break", userBreak)
+
 	router.POST("/check_order", checkOrderInK2)
 	router.POST("/check_user", checkUser)
 	router.POST("/get_idles", getIdles)
 	router.POST("/save_code", saveDataToK2)
 	router.POST("/get_k2Pcs", getPcsFromK2)
 	router.POST("/create_order", createOrder)
-	router.POST("/start_idle", startIdle)
+	router.POST("/create_idle", createIdle)
 	router.POST("/end_idle", endIdle)
 	router.POST("/end_order", endOrder)
 	go streamTime(timer)
@@ -84,10 +90,17 @@ func (p *program) run() {
 func updateDeviceMap() {
 	devicesMap = make(map[string]string)
 	for {
-		//TODO: Download devices from Zapsi
-		devicesMap["localhosta"] = "testovaci pracoviste"
-		devicesMap["192.168.23.33"] = "cnc 1"
-		devicesMap["192.168.23.32"] = "cnc 2"
+		db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+		if err != nil {
+			logError("MAIN", "Problem opening database: "+err.Error())
+		}
+		sqlDB, err := db.DB()
+		var devices []Device
+		db.Where("DeviceType = 100").Find(&devices)
+		for _, device := range devices {
+			devicesMap[device.IPAddress] = device.Name
+		}
+		sqlDB.Close()
 		time.Sleep(60 * time.Second)
 	}
 }

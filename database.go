@@ -43,16 +43,14 @@ func (Idle) TableName() string {
 }
 
 type TerminalInputIdle struct {
-	OID                  int       `gorm:"primary_key;column:OID"`
-	DTS                  time.Time `gorm:"column:DTS"`
-	DTE                  time.Time `gorm:"column:DTE"`
-	OrderID              int       `gorm:"column:OrderID"`
-	IdleID               int       `gorm:"column:IdleID"`
-	UserID               int       `gorm:"column:UserID"`
-	Interval             float32   `gorm:"column:Interval"`
-	DeviceID             int       `gorm:"column:DeviceID"`
-	TerminalInputOrderID int       `gorm:"column:TerminalInputOrderID"`
-	Note                 string    `gorm:"column:Note"`
+	OID      int       `gorm:"primary_key;column:OID"`
+	DTS      time.Time `gorm:"column:DTS"`
+	DTE      time.Time `gorm:"column:DTE"`
+	IdleID   int       `gorm:"column:IdleID"`
+	UserID   int       `gorm:"column:UserID"`
+	Interval float32   `gorm:"column:Interval"`
+	DeviceID int       `gorm:"column:DeviceID"`
+	Note     string    `gorm:"column:Note"`
 }
 
 func (TerminalInputIdle) TableName() string {

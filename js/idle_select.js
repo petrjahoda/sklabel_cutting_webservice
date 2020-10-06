@@ -177,7 +177,7 @@ function ProcessIdleStart(btn) {
             DeviceId: sessionStorage.getItem("DeviceId"),
             UserId: sessionStorage.getItem("UserId")
         };
-        fetch("/start_idle", {
+        fetch("/create_idle", {
             method: "POST",
             body: JSON.stringify(data)
         }).then((response) => {

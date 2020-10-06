@@ -254,7 +254,7 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 		return
 	}
 
-	userId, userName, userInSystem := checkUserInK2(deviceName, data.Data)
+	userId, userName, userInSystem := checkUserInZapsi(deviceName, data.Data)
 	if !userInSystem {
 		var responseData ZapsiResponseData
 		responseData.Data = "nok"
@@ -274,7 +274,24 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 	logInfo(deviceName, "Check user finished, everything ok")
 }
 
+func checkUserInZapsi(deviceName string, userRfid string) (int, string, bool) {
+	logInfo(deviceName, "Checking user "+userRfid)
+	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	if err != nil {
+		logError("MAIN", "Problem opening database: "+err.Error())
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	var user User
+	db.Where("Rfid = ?", userRfid).Find(&user)
+	if user.OID > 0 {
+		return user.OID, user.FirstName + " " + user.Name, true
+	}
+	return 0, "", false
+}
+
 func endOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	//TODO: EndOrderInZapsi(data)
 	ipAddress := strings.Split(request.Host, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
@@ -291,7 +308,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		return
 	}
 	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
-	//TODO: EndOrderInZapsi(data)
+
 	var responseData ZapsiResponseData
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
@@ -331,6 +348,7 @@ func getIdles(writer http.ResponseWriter, request *http.Request, params httprout
 }
 
 func endIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	//TODO: ENdIdleInZapsi(data)
 	ipAddress := strings.Split(request.Host, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
@@ -344,7 +362,7 @@ func endIdle(writer http.ResponseWriter, request *http.Request, params httproute
 		return
 	}
 	logInfo(deviceName, "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
-	//TODO: ENdIdleInZapsi(data)
+
 	var responseData ZapsiResponseData
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
@@ -352,7 +370,8 @@ func endIdle(writer http.ResponseWriter, request *http.Request, params httproute
 	logInfo(deviceName, "End idle in Zapsi finished, everything ok")
 }
 
-func startIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func createIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	//TODO: StartIdleInZapsi(data)
 	ipAddress := strings.Split(request.Host, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
@@ -366,7 +385,30 @@ func startIdle(writer http.ResponseWriter, request *http.Request, params httprou
 		return
 	}
 	logInfo(deviceName, "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
-	//TODO: StartIdleInZapsi(data)
+	deviceIdInt, err := strconv.Atoi(data.DeviceId)
+	userIdInt, err := strconv.Atoi(data.UserId)
+	idleIdInt, err := strconv.Atoi(data.IdleId)
+	if err != nil {
+		logError(deviceName, "Problem parsing data from user: "+err.Error())
+		var responseData ZapsiResponseData
+		responseData.Data = "nok"
+		writer.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(writer).Encode(responseData)
+		return
+	}
+	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	if err != nil {
+		logError("MAIN", "Problem opening database: "+err.Error())
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	var terminalInputIdle TerminalInputIdle
+	terminalInputIdle.DTS = time.Now()
+	terminalInputIdle.IdleID = idleIdInt
+	terminalInputIdle.UserID = userIdInt
+	terminalInputIdle.Interval = 0
+	terminalInputIdle.DeviceID = deviceIdInt
+	db.Save(&terminalInputIdle)
 	var responseData ZapsiResponseData
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
