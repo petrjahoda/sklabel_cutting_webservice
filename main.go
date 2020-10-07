@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const version = "2020.4.1.2"
+const version = "2020.4.1.7"
 const serviceName = "SK Label Cutting Webservice"
 const serviceDescription = "Web Service for terminals for cutting workplaces"
 const zapsiDatabaseConnection = "zapsi_uzivatel:zapsi@tcp(localhost:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
@@ -79,7 +79,7 @@ func (p *program) run() {
 	router.POST("/end_order", endOrder)
 	go streamTime(timer)
 	go updateDeviceMap()
-	err := http.ListenAndServe(":82", router)
+	err := http.ListenAndServe(":80", router)
 	if err != nil {
 		logError("MAIN", "Problem starting service: "+err.Error())
 		os.Exit(-1)
