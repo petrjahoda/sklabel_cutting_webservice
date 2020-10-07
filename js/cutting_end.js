@@ -59,7 +59,7 @@ function endOrder() {
             body: JSON.stringify(data)
         }).then((response) => {
             console.log("Starting order in Zapsi response: " + response.statusText);
-            window.location.replace('http://localhost:81/terminal/www/default/' + sessionStorage.getItem("DeviceId"));
+            window.location.replace('http://10.3.12:81/terminal/www/default/' + sessionStorage.getItem("DeviceId"));
         }).catch((error) => {
             console.error('Error:', error);
         });
