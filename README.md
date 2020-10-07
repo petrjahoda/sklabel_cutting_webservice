@@ -29,7 +29,7 @@ Go web service for SK Label Cutting Workplaces
 - [x] ~~vycisteni a zvyseni citelnosti kodu~~
 - [x] ~~zlepseni logovani~~
 - [x] ~~procesy na pozadi zapsi~~
-- [ ] procesy na pozadi k2
+- [x] ~~procesy na pozadi k2~~
 - [ ] otestovani na realnych datech
 
 ## Initial screens
