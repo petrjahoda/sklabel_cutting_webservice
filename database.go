@@ -142,6 +142,7 @@ type Workplace struct {
 	Name                string `gorm:"column:Name"`
 	DeviceID            int    `gorm:"column:DeviceID"`
 	WorkplaceDivisionID int    `gorm:"column:WorkplaceDivisionID"`
+	Code                string `gorm:"column:Code"`
 }
 
 func (Workplace) TableName() string {

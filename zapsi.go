@@ -80,7 +80,9 @@ func checkIpAddress(deviceName string, ipAddress string) (int, string, bool) {
 	db.Where("IpAddress = ?", ipAddress).Where("DeviceType = 100").Find(&device)
 	if len(device.Name) > 0 {
 		logInfo(deviceName, "This ip address has assigned terminal: "+device.Name)
-		return device.OID, device.Name, true
+		var workplace Workplace
+		db.Where("DeviceID = ?", device.OID).Find(&workplace)
+		return device.OID, workplace.Code, true
 	} else {
 		logInfo(deviceName, "This ip address has not assigned any terminal")
 		return 0, "", false
