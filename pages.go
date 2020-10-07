@@ -13,7 +13,7 @@ type TimePageData struct {
 }
 
 func userBreak(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -30,7 +30,7 @@ func userBreak(writer http.ResponseWriter, request *http.Request, _ httprouter.P
 }
 
 func userChange(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -47,7 +47,7 @@ func userChange(writer http.ResponseWriter, request *http.Request, _ httprouter.
 }
 
 func idleSelect(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -65,7 +65,7 @@ func idleSelect(writer http.ResponseWriter, request *http.Request, _ httprouter.
 }
 
 func idleRunning(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -83,7 +83,7 @@ func idleRunning(writer http.ResponseWriter, request *http.Request, _ httprouter
 }
 
 func cuttingEnd(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -100,7 +100,7 @@ func cuttingEnd(writer http.ResponseWriter, request *http.Request, _ httprouter.
 }
 
 func home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]

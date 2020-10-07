@@ -31,7 +31,7 @@ type K2Data struct {
 }
 
 func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -85,7 +85,7 @@ func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httproute
 }
 
 func checkOrderInK2(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -133,7 +133,7 @@ func checkOrderInSystem(deviceName string, order string) (SkZapsiVp, bool) {
 }
 
 func getPcsFromK2(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]

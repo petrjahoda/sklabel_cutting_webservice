@@ -20,7 +20,7 @@ type OriginPage struct {
 }
 
 func origin(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]

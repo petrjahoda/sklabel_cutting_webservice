@@ -90,7 +90,7 @@ func checkIpAddress(deviceName string, ipAddress string) (int, string, bool) {
 }
 
 func createOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -234,7 +234,7 @@ func GetActualWorkshiftId(deviceName string, deviceID string) int {
 }
 
 func checkUser(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -288,7 +288,7 @@ func checkUserInZapsi(deviceName string, userRfid string) (int, string, bool) {
 }
 
 func endOrder(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -348,7 +348,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 }
 
 func getIdles(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -379,7 +379,7 @@ func getIdles(writer http.ResponseWriter, request *http.Request, params httprout
 }
 
 func endIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
@@ -414,7 +414,7 @@ func endIdle(writer http.ResponseWriter, request *http.Request, params httproute
 }
 
 func createIdle(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	ipAddress := strings.Split(request.Host, ":")
+	ipAddress := strings.Split(request.RemoteAddr, ":")
 	deviceName := devicesMap[ipAddress[0]]
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
