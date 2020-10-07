@@ -37,7 +37,7 @@ function endOrder() {
     let data = {
         Type: "order",
         Code: "K302",
-        WorkplaceCode: workplace.textContent,
+        WorkplaceCode: sessionStorage.getItem("WorkplaceCode"),
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),
         IdleId: sessionStorage.getItem("IdleId"),
@@ -49,7 +49,7 @@ function endOrder() {
     }).then((response) => {
         console.log("Saving code to K2 response: " + response.statusText);
         let data = {
-            Order: sessionStorage.getItem("Order"),
+            OrderBarcode: sessionStorage.getItem("Order"),
             DeviceId: sessionStorage.getItem("DeviceId"),
             UserId: sessionStorage.getItem("UserId"),
             Pcs: enteredPcs.textContent

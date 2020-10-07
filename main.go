@@ -14,8 +14,8 @@ import (
 const version = "2020.4.1.7"
 const serviceName = "SK Label Cutting Webservice"
 const serviceDescription = "Web Service for terminals for cutting workplaces"
-const zapsiDatabaseConnection = "zapsi_uzivatel:zapsi@tcp(localhost:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
-const skLabelDatabaseConnection = "sqlserver://zapsi:DSgEEmPNxCwgTJjsd2uR@10.3.1.3/K2_SKLABEL?database=SK_Zapsi_VP"
+const zapsiDatabaseConnection = "zapsi_uzivatel:zapsi@tcp(zapsidatabase:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
+const skLabelDatabaseConnection = "sqlserver://zapsi:DSgEEmPNxCwgTJjsd2uR@10.3.1.3:1433?database=K2_SKLABEL"
 
 var devicesMap map[string]string
 

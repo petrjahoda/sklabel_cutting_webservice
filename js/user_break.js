@@ -1,5 +1,5 @@
 let data = {
-    Order: sessionStorage.getItem("Order"),
+    OrderBarcode: sessionStorage.getItem("Order"),
     DeviceId: sessionStorage.getItem("DeviceId"),
     UserId: sessionStorage.getItem("UserId")
 };
@@ -11,7 +11,7 @@ fetch("/end_order", {
     let data = {
         Type: "order",
         Code: "K219",
-        WorkplaceCode: workplace.textContent,
+        WorkplaceCode: sessionStorage.getItem("WorkplaceCode"),
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),
         IdleId: sessionStorage.getItem("IdleId"),
@@ -38,7 +38,7 @@ fetch("/end_order", {
             sessionStorage.setItem("User", "Přihlášen: " + "")
             user.textContent = "Nenávaznost obsluhy"
             let data = {
-                Order: sessionStorage.getItem("Order"),
+                OrderBarcode: sessionStorage.getItem("Order"),
                 DeviceId: sessionStorage.getItem("DeviceId"),
                 UserId: sessionStorage.getItem("")
             };
@@ -100,7 +100,7 @@ function checkUser(barcode) {
             console.log("0")
             if (currentResult === "ok") {
                 let data = {
-                    Order: barcode,
+                    OrderBarcode:sessionStorage.getItem("Order"),
                     DeviceId: sessionStorage.getItem("DeviceId"),
                     UserId: sessionStorage.getItem("UserId")
                 };
@@ -113,7 +113,7 @@ function checkUser(barcode) {
                     sessionStorage.setItem("UserId", myObj.UserId)
                     sessionStorage.setItem("User", "Přihlášen: " + myObj.UserName)
                     let data = {
-                        Order: barcode,
+                        OrderBarcode:sessionStorage.getItem("Order"),
                         DeviceId: sessionStorage.getItem("DeviceId"),
                         UserId: sessionStorage.getItem("UserId")
                     };

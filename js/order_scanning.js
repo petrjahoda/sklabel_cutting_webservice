@@ -59,7 +59,7 @@ function checkOrder(barcode) {
                 }).then((response) => {
                     console.log("Saving code to K2 response: " + response.statusText);
                     let data = {
-                        Order: barcode,
+                        OrderBarcode: barcode,
                         DeviceId: sessionStorage.getItem("DeviceId"),
                         UserId: sessionStorage.getItem("UserId")
                     };

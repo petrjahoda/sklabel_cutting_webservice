@@ -24,6 +24,9 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 - creating terminal_input_idle in zapsi database
 - closing terminal_input_idle in zapsi database
 
+### Fixed
+- some fixes in javascript and go functions
+
 ## [2020.4.1.6] - 2020-10-06
 
 ### Added

@@ -36,7 +36,7 @@ function checkUser(barcode) {
             console.log("0")
             if (currentResult === "ok") {
                 let data = {
-                    Order: barcode,
+                    OrderBarcode: sessionStorage.getItem("Order"),
                     DeviceId: sessionStorage.getItem("DeviceId"),
                     UserId: sessionStorage.getItem("UserId")
                 };
@@ -61,7 +61,7 @@ function checkUser(barcode) {
                         sessionStorage.setItem("UserId", myObj.UserId)
                         sessionStorage.setItem("User", "Přihlášen: " + myObj.UserName)
                         let data = {
-                            Order: barcode,
+                            OrderBarcode: sessionStorage.getItem("Order"),
                             DeviceId: sessionStorage.getItem("DeviceId"),
                             UserId: sessionStorage.getItem("UserId")
                         };
@@ -84,12 +84,12 @@ function checkUser(barcode) {
 
             } else {
                 result.textContent = "Uživatel " + barcode + " neexistuje v systému";
-                setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 30000)
+                setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 3000)
             }
         });
     }).catch((error) => {
         console.error('Error:', error);
         result.textContent = "Uživatel " + barcode + " neexistuje v systému";
-        setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 30000)
+        setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 3000)
     });
 }

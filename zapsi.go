@@ -32,17 +32,17 @@ type DataIdles struct {
 }
 
 type OrderData struct {
-	Order    string
-	DeviceId string
-	UserId   string
-	Pcs      string
+	OrderBarcode string
+	DeviceId     string
+	UserId       string
+	Pcs          string
 }
 
 type IdleData struct {
-	Order    string
-	IdleId   string
-	DeviceId string
-	UserId   string
+	OrderBarcode string
+	IdleId       string
+	DeviceId     string
+	UserId       string
 }
 
 func checkIfUserIsLoggedForTerminalId(deviceName string, terminalId int) (int, string, bool) {
@@ -104,7 +104,7 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 		_ = json.NewEncoder(writer).Encode(responseData)
 		return
 	}
-	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
 	actualWorkshiftId := GetActualWorkshiftId(deviceName, data.DeviceId)
 	if actualWorkshiftId == 0 {
 		logError(deviceName, "Problem getting workshift id")
@@ -127,7 +127,7 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	defer sqlDB.Close()
 
 	var order Order
-	db.Where("Barcode = ?", data.Order).Find(&order)
+	db.Where("Barcode = ?", data.OrderBarcode).Find(&order)
 	userIdInt, err := strconv.Atoi(data.UserId)
 	if err != nil {
 		logError(deviceName, "Problem parsing userid "+data.UserId+": "+err.Error())
@@ -145,7 +145,7 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	var workplace Workplace
 	db.Where("DeviceId = ?", deviceIdInt).Find(&workplace)
 	var workplaceMode WorkplaceMode
-	db.Where("WorkplaceModeTypeID = 4").Where("WorkplaceID = ?", workplace.OID).Find(&workplaceMode)
+	db.Where("WorkplaceModeTypeID = 5").Where("WorkplaceID = ?", workplace.OID).Find(&workplaceMode)
 
 	var terminalInputOrder TerminalInputOrder
 	terminalInputOrder.DTS = time.Now()
@@ -197,7 +197,7 @@ func GetActualWorkshiftId(deviceName string, deviceID string) int {
 	var workplaceDivision WorkplaceDivision
 	db.Where("OID = ?", workplace.WorkplaceDivisionID).Find(&workplaceDivision)
 	var workShifts []Workshift
-	db.Where("Active = 1").Where("WorkplaceDivisionID = ?", workplaceDivision.OID).Find(&workShifts)
+	db.Where("Active = 1").Find(&workShifts)
 	logInfo(deviceName, "Found "+strconv.Itoa(len(workShifts))+" active workshifts")
 	if len(workShifts) > 0 {
 		logInfo(deviceName, "Finding proper workshift")
@@ -301,7 +301,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		writer.Header().Set("Content-Type", "application/json")
 		return
 	}
-	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId+"; pcs: "+data.Pcs)
+	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId+"; pcs: "+data.Pcs)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
@@ -335,9 +335,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 			Valid: true,
 		}
 		terminalInputLogin.Interval = float32(time.Since(terminalInputLogin.DTS).Minutes())
-		println("here")
 		db.Save(&terminalInputLogin)
-		println("here 2")
 	} else {
 		logError(deviceName, "No terminal_input_login found when closing order")
 	}
@@ -391,7 +389,7 @@ func endIdle(writer http.ResponseWriter, request *http.Request, params httproute
 		logError(deviceName, "Error parsing data from page: "+err.Error())
 		return
 	}
-	logInfo(deviceName, "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
@@ -426,7 +424,7 @@ func createIdle(writer http.ResponseWriter, request *http.Request, params httpro
 		logError(deviceName, "Error parsing data from page: "+err.Error())
 		return
 	}
-	logInfo(deviceName, "Order: "+data.Order+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
 	deviceIdInt, err := strconv.Atoi(data.DeviceId)
 	userIdInt, err := strconv.Atoi(data.UserId)
 	idleIdInt, err := strconv.Atoi(data.IdleId)
@@ -469,9 +467,9 @@ func checkOrderInZapsi(deviceName string, skZapsiVp SkZapsiVp) {
 	var order Order
 	db.Where("Barcode = ?", skZapsiVp.VPexp).Find(&order)
 	if order.OID > 0 {
-		logInfo(deviceName, "Order with barcode "+skZapsiVp.VPexp+" already exists")
+		logInfo(deviceName, "OrderBarcode with barcode "+skZapsiVp.VPexp+" already exists")
 	} else {
-		logInfo(deviceName, "Order with barcode "+skZapsiVp.VPexp+" does not exists, creating")
+		logInfo(deviceName, "OrderBarcode with barcode "+skZapsiVp.VPexp+" does not exists, creating")
 		var newOrder Order
 		newOrder.Name = skZapsiVp.VP
 		newOrder.Barcode = skZapsiVp.VPexp

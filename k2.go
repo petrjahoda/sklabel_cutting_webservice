@@ -124,7 +124,7 @@ func checkOrderInSystem(deviceName string, order string) (SkZapsiVp, bool) {
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
 	var skZapsiVp SkZapsiVp
-	db.Debug().Where("MaterialBM IS NOT NULL").Where("MaterialBL > 0").Where("VPexp = ?", order).Find(&skZapsiVp)
+	db.Where("MaterialBM IS NOT NULL").Where("MaterialBM > 0").Where("VPexp = ?", order).Find(&skZapsiVp)
 	if skZapsiVp.RID > 0 {
 		return skZapsiVp, true
 	} else {
@@ -160,7 +160,7 @@ func getPcsFromK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
 	var skZapsiVp SkZapsiVp
-	db.Debug().Where("MaterialBM IS NOT NULL").Where("MaterialBL > 0").Where("VPexp = ?", data.Data).Find(&skZapsiVp)
+	db.Where("MaterialBM IS NOT NULL").Where("MaterialBM > 0").Where("VPexp = ?", data.Data).Find(&skZapsiVp)
 	var responseData K2ResponseData
 	if skZapsiVp.RID > 0 {
 		data := strconv.FormatFloat(float64(skZapsiVp.MaterialBM), 'g', 1, 32)

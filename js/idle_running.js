@@ -30,7 +30,7 @@ function endIdle() {
     }).then((response) => {
         console.log("Saving code to K2 response: " + response.statusText);
         let data = {
-            Order: sessionStorage.getItem("Order"),
+            OrderBarcode: sessionStorage.getItem("Order"),
             IdleId: sessionStorage.getItem("IdleId"),
             DeviceId: sessionStorage.getItem("DeviceId"),
             UserId: sessionStorage.getItem("UserId")

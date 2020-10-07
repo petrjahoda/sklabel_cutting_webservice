@@ -179,7 +179,7 @@ function ProcessIdleStart(btn) {
     }).then((response) => {
         console.log("Saving code to K2 response: " + response.statusText);
         let data = {
-            Order: sessionStorage.getItem("Order"),
+            OrderBarcode: sessionStorage.getItem("Order"),
             IdleId: btn.dataset.id,
             DeviceId: sessionStorage.getItem("DeviceId"),
             UserId: sessionStorage.getItem("UserId")
