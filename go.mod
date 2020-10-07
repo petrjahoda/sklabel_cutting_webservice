@@ -9,7 +9,7 @@ require (
 	github.com/julienschmidt/sse v0.0.0-20190921213156-72db694fe9e6
 	github.com/kardianos/service v1.1.0
 	golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0 // indirect
-	golang.org/x/sys v0.0.0-20201006155630-ac719f4daadf // indirect
+	golang.org/x/sys v0.0.0-20201007082116-8445cc04cbdf // indirect
 	gorm.io/driver/mysql v1.0.2
 	gorm.io/driver/sqlserver v1.0.4
 	gorm.io/gorm v1.20.2

@@ -19,8 +19,8 @@ window.addEventListener("keyup", function (event) {
     entryData = entryData.replaceAll("Enter", "");
     entryData = entryData.replaceAll("Shift", "");
     if (event.key === "Enter" && entryData.length > 0) {
-        console.log("DATA: " + entryData)
-        checkOrder(entryData);
+        console.log("DATA: " + entryData.toUpperCase())
+        checkOrder(entryData.toUpperCase());
         entryData = "";
     } else {
         entryData += event.key;
