@@ -8,13 +8,27 @@ fetch("/end_order", {
     body: JSON.stringify(data)
 }).then((response) => {
     console.log("Ending order in Zapsi response: " + response.statusText);
-    let data = {Data: "K219"};
+    let data = {
+        Type: "order",
+        Code: "K219",
+        WorkplaceCode: workplace.textContent,
+        UserId: sessionStorage.getItem("UserId"),
+        OrderBarcode: sessionStorage.getItem("Order"),
+        IdleId: sessionStorage.getItem("IdleId"),
+    };
     fetch("/save_code", {
         method: "POST",
         body: JSON.stringify(data)
     }).then((response) => {
         console.log("Saving code to K2 response: " + response.statusText);
-        let data = {Data: "0004"};
+        let data = {
+            Type: "order",
+            Code: "0004",
+            WorkplaceCode: workplace.textContent,
+            UserId: sessionStorage.getItem("UserId"),
+            OrderBarcode: sessionStorage.getItem("Order"),
+            IdleId: sessionStorage.getItem("IdleId"),
+        };
         fetch("/save_code", {
             method: "POST",
             body: JSON.stringify(data)

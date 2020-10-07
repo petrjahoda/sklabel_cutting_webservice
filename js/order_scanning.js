@@ -7,8 +7,8 @@ let entryData = ""
 sessionStorage.clear()
 sessionStorage.setItem("WorkplaceCode", workplace.textContent)
 sessionStorage.setItem("User", user.textContent)
-sessionStorage.setItem("UserId", workplace.dataset.deviceid)
-sessionStorage.setItem("DeviceId", user.dataset.userid)
+sessionStorage.setItem("UserId", user.dataset.userid)
+sessionStorage.setItem("DeviceId", workplace.dataset.deviceid)
 
 time.addEventListener('time', (e) => {
     document.getElementById("time").innerHTML = e.data;
@@ -45,7 +45,14 @@ function checkOrder(barcode) {
             let currentResult = myObj.Data;
             if (currentResult === "ok") {
                 sessionStorage.setItem("Order", barcode)
-                let data = {Data: "K108"};
+                let data = {
+                    Type: "order",
+                    Code: "K108",
+                    WorkplaceCode: workplace.textContent,
+                    UserId: sessionStorage.getItem("UserId"),
+                    OrderBarcode: sessionStorage.getItem("Order"),
+                    IdleId: sessionStorage.getItem("IdleId"),
+                };
                 fetch("/save_code", {
                     method: "POST",
                     body: JSON.stringify(data)

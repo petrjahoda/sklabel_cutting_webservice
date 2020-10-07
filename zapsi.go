@@ -35,6 +35,7 @@ type OrderData struct {
 	Order    string
 	DeviceId string
 	UserId   string
+	Pcs      string
 }
 
 type IdleData struct {
@@ -113,7 +114,6 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 		_ = json.NewEncoder(writer).Encode(responseData)
 		return
 	}
-	createOrderIfNotPresent(deviceName, data.Order)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
@@ -125,6 +125,7 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	}
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
+
 	var order Order
 	db.Where("Barcode = ?", data.Order).Find(&order)
 	userIdInt, err := strconv.Atoi(data.UserId)
@@ -141,6 +142,11 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 		_ = json.NewEncoder(writer).Encode(responseData)
 		return
 	}
+	var workplace Workplace
+	db.Where("DeviceId = ?", deviceIdInt).Find(&workplace)
+	var workplaceMode WorkplaceMode
+	db.Where("WorkplaceModeTypeID = 4").Where("WorkplaceID = ?", workplace.OID).Find(&workplaceMode)
+
 	var terminalInputOrder TerminalInputOrder
 	terminalInputOrder.DTS = time.Now()
 	terminalInputOrder.OrderID = order.OID
@@ -150,7 +156,7 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	terminalInputOrder.Fail = 0
 	terminalInputOrder.AverageCycle = 0
 	terminalInputOrder.WorkerCount = 0
-	terminalInputOrder.WorkplaceModeID = 1 //TODO: upravit tady spravne
+	terminalInputOrder.WorkplaceModeID = workplaceMode.OID
 	terminalInputOrder.WorkshiftID = actualWorkshiftId
 	if userIdInt != 0 {
 		terminalInputOrder.UserID = sql.NullInt32{
@@ -159,36 +165,23 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 		}
 	}
 	db.Save(&terminalInputOrder)
+	var terminalInputLogin TerminalInputLogin
+	db.Where("DeviceID = ?", data.DeviceId).Where("UserID = ?", data.UserId).Where("DTE is NULL").Find(&terminalInputLogin)
+	if terminalInputLogin.OID > 0 {
+		logInfo(deviceName, "User already logged in terminal_input_login")
+	} else if userIdInt != 0 {
+		logInfo(deviceName, "Logging user to terminal_input_login")
+		var newTerminalInputLogin TerminalInputLogin
+		newTerminalInputLogin.DTS = time.Now()
+		newTerminalInputLogin.DeviceID = deviceIdInt
+		newTerminalInputLogin.UserID = userIdInt
+		db.Save(&newTerminalInputLogin)
+	}
 	var responseData ZapsiResponseData
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
 	logInfo(deviceName, "Create order in Zapsi finished, everything ok")
-}
-
-func createOrderIfNotPresent(deviceName string, orderBarcode string) {
-	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
-	if err != nil {
-		logError(deviceName, "Problem opening database: "+err.Error())
-		return
-	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
-	var order Order
-	db.Where("Barcode = ?", orderBarcode).Find(&order)
-	if order.OID > 0 {
-		logInfo(deviceName, "Order already exists")
-		return
-	} else {
-		logInfo(deviceName, "Order does not exist, creating")
-		var newOrder Order
-		newOrder.Name = orderBarcode //TODO: upravit tady spravne
-		newOrder.Barcode = orderBarcode
-		newOrder.ProductID = 101   //TODO: upravit tady spravne
-		newOrder.OrderStatusID = 1 //TODO: upravit tady spravne
-		newOrder.WorkplaceID = 1   //TODO: upravit tady spravne
-		db.Save(&newOrder)
-	}
 }
 
 func GetActualWorkshiftId(deviceName string, deviceID string) int {
@@ -200,7 +193,7 @@ func GetActualWorkshiftId(deviceName string, deviceID string) int {
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
 	var workplace Workplace
-	db.Where("DeviceId = ?", deviceID).Find(&workplace)
+	db.Where("DeviceID = ?", deviceID).Find(&workplace)
 	var workplaceDivision WorkplaceDivision
 	db.Where("OID = ?", workplace.WorkplaceDivisionID).Find(&workplaceDivision)
 	var workShifts []Workshift
@@ -308,13 +301,18 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		writer.Header().Set("Content-Type", "application/json")
 		return
 	}
-	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
+	logInfo(deviceName, "Order: "+data.Order+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId+"; pcs: "+data.Pcs)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		responseData.Data = "nok"
 		writer.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(writer).Encode(responseData)
+	}
+	pcsToInsert, err := strconv.Atoi(data.Pcs)
+	if err != nil {
+		logError(deviceName, "Problem parsing count: "+err.Error())
+		pcsToInsert = 0
 	}
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
@@ -325,7 +323,24 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		Valid: true,
 	}
 	runningOrder.Interval = float32(time.Since(runningOrder.DTS).Minutes())
+	runningOrder.Count = pcsToInsert
+	runningOrder.AverageCycle = float32(time.Since(runningOrder.DTS).Minutes()) / float32(pcsToInsert)
 	db.Save(&runningOrder)
+	var terminalInputLogin TerminalInputLogin
+	db.Where("DeviceID = ? ", data.DeviceId).Where("DTE is NULL").Find(&terminalInputLogin)
+	if terminalInputLogin.OID > 0 {
+		logInfo(deviceName, "Closing terminal_input_login")
+		terminalInputLogin.DTE = sql.NullTime{
+			Time:  time.Now(),
+			Valid: true,
+		}
+		terminalInputLogin.Interval = float32(time.Since(terminalInputLogin.DTS).Minutes())
+		println("here")
+		db.Save(&terminalInputLogin)
+		println("here 2")
+	} else {
+		logError(deviceName, "No terminal_input_login found when closing order")
+	}
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
@@ -441,4 +456,54 @@ func createIdle(writer http.ResponseWriter, request *http.Request, params httpro
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
 	logInfo(deviceName, "Start idle in Zapsi finished, everything ok")
+}
+
+func checkOrderInZapsi(deviceName string, skZapsiVp SkZapsiVp) {
+	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	if err != nil {
+		logError(deviceName, "Problem opening database: "+err.Error())
+		return
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	var order Order
+	db.Where("Barcode = ?", skZapsiVp.VPexp).Find(&order)
+	if order.OID > 0 {
+		logInfo(deviceName, "Order with barcode "+skZapsiVp.VPexp+" already exists")
+	} else {
+		logInfo(deviceName, "Order with barcode "+skZapsiVp.VPexp+" does not exists, creating")
+		var newOrder Order
+		newOrder.Name = skZapsiVp.VP
+		newOrder.Barcode = skZapsiVp.VPexp
+		newOrder.ProductID = 100
+		newOrder.OrderStatusID = 1
+		newOrder.CountRequested = 0
+		db.Save(&newOrder)
+	}
+}
+
+func GetUserLoginFor(deviceName string, userId string) string {
+	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	if err != nil {
+		logError(deviceName, "Problem opening database: "+err.Error())
+		return ""
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	var user User
+	db.Where("OID = ?", userId).Find(&user)
+	return user.Login
+}
+
+func GetIdleBarcodeFor(deviceName string, idleId string) string {
+	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	if err != nil {
+		logError(deviceName, "Problem opening database: "+err.Error())
+		return ""
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	var idle Idle
+	db.Where("OID = ?", idleId).Find(&idle)
+	return idle.Barcode
 }

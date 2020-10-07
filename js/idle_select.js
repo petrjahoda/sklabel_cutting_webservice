@@ -165,7 +165,14 @@ function showNext() {
 }
 
 function ProcessIdleStart(btn) {
-    let data = {Data: "K219"};
+    let data = {
+        Type: "idle",
+        Code: "K219",
+        WorkplaceCode: workplace.textContent,
+        UserId: sessionStorage.getItem("UserId"),
+        OrderBarcode: sessionStorage.getItem("Order"),
+        IdleId: sessionStorage.getItem("IdleId"),
+    };
     fetch("/save_code", {
         method: "POST",
         body: JSON.stringify(data)

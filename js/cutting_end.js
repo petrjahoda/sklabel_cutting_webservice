@@ -34,7 +34,15 @@ fetch("/get_k2Pcs", {
 
 
 function endOrder() {
-    let data = {Data: "K302"};
+    let data = {
+        Type: "order",
+        Code: "K302",
+        WorkplaceCode: workplace.textContent,
+        UserId: sessionStorage.getItem("UserId"),
+        OrderBarcode: sessionStorage.getItem("Order"),
+        IdleId: sessionStorage.getItem("IdleId"),
+        Pcs: enteredPcs.textContent
+    };
     fetch("/save_code", {
         method: "POST",
         body: JSON.stringify(data)
@@ -43,7 +51,8 @@ function endOrder() {
         let data = {
             Order: sessionStorage.getItem("Order"),
             DeviceId: sessionStorage.getItem("DeviceId"),
-            UserId: sessionStorage.getItem("UserId")
+            UserId: sessionStorage.getItem("UserId"),
+            Pcs: enteredPcs.textContent
         };
         fetch("/end_order", {
             method: "POST",

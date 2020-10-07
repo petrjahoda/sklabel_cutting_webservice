@@ -45,7 +45,14 @@ function checkUser(barcode) {
                     body: JSON.stringify(data)
                 }).then((response) => {
                     console.log("Ending order in Zapsi response: " + response.statusText);
-                    let data = {Data: "K105"};
+                    let data = {
+                        Type: "order",
+                        Code: "K105",
+                        WorkplaceCode: workplace.textContent,
+                        UserId: sessionStorage.getItem("UserId"),
+                        OrderBarcode: sessionStorage.getItem("Order"),
+                        IdleId: sessionStorage.getItem("IdleId"),
+                    };
                     fetch("/save_code", {
                         method: "POST",
                         body: JSON.stringify(data)

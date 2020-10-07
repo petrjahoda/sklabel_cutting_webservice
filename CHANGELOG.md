@@ -14,7 +14,17 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
-## [2020.4.1.6] - 2020-19-06
+
+## [2020.4.1.7] - 2020-10-07
+
+### Added
+- reading order from K2
+- reading pcs from K2
+- saving data to K2 database (final saving in disabled, just inputting info)
+- creating terminal_input_idle in zapsi database
+- closing terminal_input_idle in zapsi database
+
+## [2020.4.1.6] - 2020-10-06
 
 ### Added
 - screens and behavior for idles
@@ -43,7 +53,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
     - one goroutine periodically checks for [ipaddress+device name] from zapsi database
     - when logging is called, device name is displayed like this ```[CNC1] --INF-- Saving data to K2```
 
-## [2020.4.1.5] - 2020-19-05
+## [2020.4.1.5] - 2020-10-05
 
 ### Added
 - screens and behavior for user change
@@ -52,7 +62,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 ### Changed
 - some javascript changes
 
-## [2020.4.1.2] - 2020-19-02
+## [2020.4.1.2] - 2020-10-02
 
 ### Added
 - initial commit

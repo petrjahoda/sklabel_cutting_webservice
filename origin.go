@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type OrderScanningPage struct {
@@ -51,7 +50,6 @@ func origin(writer http.ResponseWriter, request *http.Request, _ httprouter.Para
 	var data OrderScanningPage
 	data.WorkplaceCode = workplaceCode
 	data.User = user
-	data.Time = time.Now().Format("15:04:05")
 	data.DeviceId = strconv.Itoa(terminalId)
 	data.UserId = strconv.Itoa(userId)
 	tmpl := template.Must(template.ParseFiles("./html/order_scanning.html"))
