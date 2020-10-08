@@ -15,6 +15,11 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Security``` in case of vulnerabilities.
 
 
+## [2020.4.1.8] - 2020-10-08
+
+### Added
+- removing "/R" from scanned order barcode
+
 ## [2020.4.1.7] - 2020-10-07
 
 ### Added
