@@ -16,6 +16,7 @@ type ZapsiResponseData struct {
 	Data     string
 	UserId   int
 	UserName string
+	Result   string
 }
 
 type ZapsiData struct {
@@ -250,13 +251,18 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 		_ = json.NewEncoder(writer).Encode(responseData)
 		return
 	}
-
-	userId, userName, userInSystem := checkUserInZapsi(deviceName, data.Data)
+	logInfo(deviceName, "Data before parsing: "+data.Data)
+	updatedData := strings.ReplaceAll(data.Data, "SHIFT", "")
+	updatedData = strings.ReplaceAll(updatedData, "ENTER", "")
+	updatedData = strings.ReplaceAll(updatedData, "/R", "")
+	logInfo(deviceName, "Data after parsing: "+updatedData)
+	userId, userName, userInSystem := checkUserInZapsi(deviceName, updatedData)
 	if !userInSystem {
 		var responseData ZapsiResponseData
 		responseData.Data = "nok"
 		responseData.UserId = userId
 		responseData.UserName = userName
+		responseData.Result = updatedData
 		writer.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(writer).Encode(responseData)
 		logInfo(deviceName, "Check user finished, user not in system")
@@ -266,6 +272,7 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 	responseData.Data = "ok"
 	responseData.UserId = userId
 	responseData.UserName = userName
+	responseData.Result = updatedData
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
 	logInfo(deviceName, "Check user finished, everything ok")

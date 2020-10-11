@@ -14,6 +14,15 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.4.1.11] - 2020-10-11
+
+### Fixed
+- added windows.focus() to js files, where scanning from barcode reader or rfid reader is present
+
+### Changed
+- what is scanned (including meta characters like Enter, etc.) is send to backend
+- parsing is processed in backend to know, what was scanned
+- updated parsed value is send back to frontend
 
 ## [2020.4.1.8] - 2020-10-08
 

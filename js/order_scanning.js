@@ -14,19 +14,18 @@ time.addEventListener('time', (e) => {
     document.getElementById("time").innerHTML = e.data;
 }, false);
 
-window.addEventListener("keyup", function (event) {
-    entryData = entryData.replace("Meta", "");
-    entryData = entryData.replaceAll("Enter", "");
-    entryData = entryData.replaceAll("Shift", "");
-    if (event.key === "Enter" && entryData.length > 0) {
-        console.log("DATA BEFORE: " + entryData.toUpperCase())
-        let codeStripped = entryData.toUpperCase().replace("/R", "");
-        console.log("DATA AFTER: " + codeStripped.toUpperCase())
-        checkOrder(codeStripped.toUpperCase());
-        entryData = "";
-    } else {
-        entryData += event.key;
+
+document.addEventListener("keyup", function (event) {
+    entryData += event.key;
+    if (entryData.includes("Enter")) {
+        checkOrder(entryData.toUpperCase());
+        entryData = ""
     }
+});
+
+
+document.addEventListener("touchend", function (event) {
+    result.textContent = "touched"
 });
 
 goBack.addEventListener("touchend", () => {
@@ -46,7 +45,7 @@ function checkOrder(barcode) {
             let myObj = JSON.parse(text);
             let currentResult = myObj.Data;
             if (currentResult === "ok") {
-                sessionStorage.setItem("Order", barcode)
+                sessionStorage.setItem("Order", myObj.Result)
                 let data = {
                     Type: "order",
                     Code: "K108",
@@ -61,7 +60,7 @@ function checkOrder(barcode) {
                 }).then((response) => {
                     console.log("Saving code to K2 response: " + response.statusText);
                     let data = {
-                        OrderBarcode: barcode,
+                        OrderBarcode: myObj.Result,
                         DeviceId: sessionStorage.getItem("DeviceId"),
                         UserId: sessionStorage.getItem("UserId")
                     };
@@ -79,14 +78,15 @@ function checkOrder(barcode) {
                 });
 
             } else {
-                result.textContent = "Načtený kód " + barcode + " neexistuje v systému.";
+                result.textContent = "Načtený kód " + myObj.Result + " neexistuje v systému.";
                 setTimeout(() => result.textContent = "Načtěte čárový kód zakázky", 3000)
             }
         });
     }).catch((error) => {
         console.error('Error:', error);
-        result.textContent = "Načtený kód " + barcode + " neexistuje v systému.";
+        result.textContent = "Chyba komunikace";
         setTimeout(() => result.textContent = "Načtěte čárový kód zakázky", 3000)
     });
 }
 
+window.focus()

@@ -76,15 +76,10 @@ time.addEventListener('time', (e) => {
 }, false);
 
 window.addEventListener("keyup", function (event) {
-    entryData = entryData.replace("Meta", "");
-    entryData = entryData.replaceAll("Enter", "");
-    entryData = entryData.replaceAll("Shift", "");
-    if (event.key === "Enter" && entryData.length > 0) {
-        console.log("DATA: " + entryData)
-        checkUser(entryData);
-        entryData = "";
-    } else {
-        entryData += event.key;
+    entryData += event.key;
+    if (entryData.includes("Enter")) {
+        checkUser(entryData.toUpperCase());
+        entryData = ""
     }
 });
 
@@ -100,11 +95,10 @@ function checkUser(barcode) {
             console.log("0")
             if (currentResult === "ok") {
                 let data = {
-                    OrderBarcode:sessionStorage.getItem("Order"),
+                    OrderBarcode: sessionStorage.getItem("Order"),
                     DeviceId: sessionStorage.getItem("DeviceId"),
                     UserId: sessionStorage.getItem("UserId")
                 };
-                let result = ""
                 fetch("/end_order", {
                     method: "POST",
                     body: JSON.stringify(data)
@@ -112,8 +106,8 @@ function checkUser(barcode) {
                     console.log("Ending order in Zapsi response: " + response.statusText);
                     sessionStorage.setItem("UserId", myObj.UserId)
                     sessionStorage.setItem("User", "Přihlášen: " + myObj.UserName)
-                    let data = {
-                        OrderBarcode:sessionStorage.getItem("Order"),
+                    data = {
+                        OrderBarcode: sessionStorage.getItem("Order"),
                         DeviceId: sessionStorage.getItem("DeviceId"),
                         UserId: sessionStorage.getItem("UserId")
                     };
@@ -131,15 +125,15 @@ function checkUser(barcode) {
                 });
 
             } else {
-                result.textContent = "Uživatel " + barcode + " neexistuje v systému";
+                result.textContent = "Uživatel " + myObj.Result + " neexistuje v systému";
                 setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 3000)
             }
         });
-    }).catch((error) => {
-        console.error('Error:', error);
-        result.textContent = "Problém v komunikaci se serverem.";
+    }).catch(() => {
+        result.textContent = "Chyba komunikace";
+        setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 3000)
     });
 }
 
 
-
+window.focus()

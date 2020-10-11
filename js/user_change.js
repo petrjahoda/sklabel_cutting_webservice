@@ -2,7 +2,7 @@ const time = new EventSource('/time');
 const result = document.getElementById('result');
 const workplace = document.getElementById("workplace");
 const user = document.getElementById("user");
-let data = ""
+let entryData = ""
 workplace.textContent = sessionStorage.getItem("WorkplaceCode")
 user.textContent = sessionStorage.getItem("User")
 result.textContent = "Přihlaste se přiložením karty"
@@ -12,15 +12,10 @@ time.addEventListener('time', (e) => {
 }, false);
 
 window.addEventListener("keyup", function (event) {
-    data = data.replace("Meta", "");
-    data = data.replaceAll("Enter", "");
-    data = data.replaceAll("Shift", "");
-    if (event.key === "Enter" && data.length > 0) {
-        console.log("DATA: " + data)
-        checkUser(data);
-        data = "";
-    } else {
-        data += event.key;
+    entryData += event.key;
+    if (entryData.includes("Enter")) {
+        checkUser(entryData.toUpperCase());
+        entryData = ""
     }
 });
 
@@ -35,14 +30,14 @@ function checkUser(barcode) {
             let currentResult = myObj.Data;
             console.log("0")
             if (currentResult === "ok") {
-                let data = {
+                data = {
                     OrderBarcode: sessionStorage.getItem("Order"),
                     DeviceId: sessionStorage.getItem("DeviceId"),
                     UserId: sessionStorage.getItem("UserId")
                 };
                 fetch("/end_order", {
                     method: "POST",
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(myObj.Result)
                 }).then((response) => {
                     console.log("Ending order in Zapsi response: " + response.statusText);
                     let data = {
@@ -83,13 +78,14 @@ function checkUser(barcode) {
                 });
 
             } else {
-                result.textContent = "Uživatel " + barcode + " neexistuje v systému";
+                result.textContent = "Uživatel " + myObj.Result + " neexistuje v systému";
                 setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 3000)
             }
         });
-    }).catch((error) => {
-        console.error('Error:', error);
-        result.textContent = "Uživatel " + barcode + " neexistuje v systému";
+    }).catch(() => {
+        result.textContent = "Chyba komunikace";
         setTimeout(() => result.textContent = "Přihlaste se přiložením karty", 3000)
     });
 }
+
+window.focus()

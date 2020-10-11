@@ -13,6 +13,7 @@ import (
 
 type K2ResponseData struct {
 	Data     string
+	Result   string
 	UserId   int
 	UserName string
 }
@@ -97,11 +98,16 @@ func checkOrderInK2(writer http.ResponseWriter, request *http.Request, _ httprou
 		logError(deviceName, "Error parsing data from page: "+err.Error())
 		return
 	}
-	logInfo(deviceName, "Data: "+data.Data)
-	skZapsiVP, orderIsInSystem := checkOrderInSystem(deviceName, data.Data)
+	logInfo(deviceName, "Data before parsing: "+data.Data)
+	updatedCode := strings.ReplaceAll(data.Data, "SHIFT", "")
+	updatedCode = strings.ReplaceAll(updatedCode, "ENTER", "")
+	updatedCode = strings.ReplaceAll(updatedCode, "/R", "")
+	logInfo(deviceName, "Data parsed: "+updatedCode)
+	skZapsiVP, orderIsInSystem := checkOrderInSystem(deviceName, updatedCode)
 	var responseData K2ResponseData
 	if !orderIsInSystem {
 		responseData.Data = "nok"
+		responseData.Result = updatedCode
 		writer.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(writer).Encode(responseData)
 		logInfo(deviceName, "Checking order in K2 finished, order not in K2 database ")
@@ -109,6 +115,7 @@ func checkOrderInK2(writer http.ResponseWriter, request *http.Request, _ httprou
 	}
 	checkOrderInZapsi(deviceName, skZapsiVP)
 	responseData.Data = "ok"
+	responseData.Result = updatedCode
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
 	logInfo(deviceName, "Check order in K2 finished, everything ok")
