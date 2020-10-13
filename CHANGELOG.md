@@ -18,6 +18,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
 ### Fixed
 - when ending cutting, click events removed from js, they caused duplicates
+- bad ip address after ending cutting
 
 ### Changed
 - time is everywhere in HH:MM
