@@ -76,7 +76,7 @@ func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	zapsiK2.Typ = 200
 	zapsiK2.Data = dataToInsert
 	zapsiK2.Zprac = 0
-	//db.Save(&zapsiK2)
+	db.Save(&zapsiK2)
 	var responseData K2ResponseData
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
@@ -91,31 +91,31 @@ func checkOrderInK2(writer http.ResponseWriter, request *http.Request, _ httprou
 	if len(deviceName) == 0 {
 		deviceName = ipAddress[0]
 	}
-	logInfo(deviceName, "Check order in K2 called")
-	var data K2Data
-	err := json.NewDecoder(request.Body).Decode(&data)
-	if err != nil {
-		logError(deviceName, "Error parsing data from page: "+err.Error())
-		return
-	}
-	logInfo(deviceName, "Data before parsing: "+data.Data)
-	updatedCode := strings.ReplaceAll(data.Data, "SHIFT", "")
-	updatedCode = strings.ReplaceAll(updatedCode, "ENTER", "")
-	updatedCode = strings.ReplaceAll(updatedCode, "/R", "")
-	logInfo(deviceName, "Data parsed: "+updatedCode)
-	skZapsiVP, orderIsInSystem := checkOrderInSystem(deviceName, updatedCode)
+	//logInfo(deviceName, "Check order in K2 called")
+	//var data K2Data
+	//err := json.NewDecoder(request.Body).Decode(&data)
+	//if err != nil {
+	//	logError(deviceName, "Error parsing data from page: "+err.Error())
+	//	return
+	//}
+	//logInfo(deviceName, "Data before parsing: "+data.Data)
+	//updatedCode := strings.ReplaceAll(data.Data, "SHIFT", "")
+	//updatedCode = strings.ReplaceAll(updatedCode, "ENTER", "")
+	//updatedCode = strings.ReplaceAll(updatedCode, "/R", "")
+	//logInfo(deviceName, "Data parsed: "+updatedCode)
+	//skZapsiVP, orderIsInSystem := checkOrderInSystem(deviceName, updatedCode)
 	var responseData K2ResponseData
-	if !orderIsInSystem {
-		responseData.Data = "nok"
-		responseData.Result = updatedCode
-		writer.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(writer).Encode(responseData)
-		logInfo(deviceName, "Checking order in K2 finished, order not in K2 database ")
-		return
-	}
-	checkOrderInZapsi(deviceName, skZapsiVP)
+	//if !orderIsInSystem {
+	//	responseData.Data = "nok"
+	//	responseData.Result = updatedCode
+	//	writer.Header().Set("Content-Type", "application/json")
+	//	_ = json.NewEncoder(writer).Encode(responseData)
+	//	logInfo(deviceName, "Checking order in K2 finished, order not in K2 database ")
+	//	return
+	//}
+	//checkOrderInZapsi(deviceName, skZapsiVP)
 	responseData.Data = "ok"
-	responseData.Result = updatedCode
+	//responseData.Result = updatedCode
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
 	logInfo(deviceName, "Check order in K2 finished, everything ok")
@@ -170,11 +170,12 @@ func getPcsFromK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	db.Where("MaterialBM IS NOT NULL").Where("MaterialBM > 0").Where("VPexp = ?", data.Data).Find(&skZapsiVp)
 	var responseData K2ResponseData
 	if skZapsiVp.RID > 0 {
-		data := strconv.FormatFloat(float64(skZapsiVp.MaterialBM), 'g', 1, 32)
+		data := strconv.FormatFloat(float64(skZapsiVp.Mnoz_PL), 'g', 1, 32)
 		if err != nil {
 			logError(deviceName, "Cannot parse MaterialBM: "+err.Error())
 			responseData.Data = "0"
 		} else {
+			logInfo(deviceName, "Pcs from K2: "+data)
 			responseData.Data = data
 		}
 	} else {

@@ -69,71 +69,71 @@ function endOrder() {
     });
 }
 
-btn0.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "0"
-})
+// btn0.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "0"
+// })
 btn0.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "0"
 })
-btn1.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "1"
-})
+// btn1.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "1"
+// })
 btn1.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "1"
 })
-btn2.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "2"
-})
+// btn2.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "2"
+// })
 btn2.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "2"
 })
-btn3.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "3"
-})
+// btn3.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "3"
+// })
 btn3.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "3"
 })
-btn4.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "4"
-})
+// btn4.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "4"
+// })
 btn4.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "4"
 })
-btn5.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "5"
-})
+// btn5.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "5"
+// })
 btn5.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "5"
 })
-btn6.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "6"
-})
+// btn6.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "6"
+// })
 btn6.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "6"
 })
-btn7.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "7"
-})
+// btn7.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "7"
+// })
 btn7.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "7"
 })
-btn8.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "8"
-})
+// btn8.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "8"
+// })
 btn8.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "8"
 })
-btn9.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent + "9"
-})
-btn9.addEventListener("touchend", () => {
-    enteredPcs.textContent = enteredPcs.textContent.slice(0, -1)
-})
-btnDel.addEventListener("click", () => {
-    enteredPcs.textContent = enteredPcs.textContent.slice(0, -1)
-})
+// btn9.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent + "9"
+// })
 btnDel.addEventListener("touchend", () => {
+    enteredPcs.textContent = enteredPcs.textContent.slice(0, -1)
+})
+// btnDel.addEventListener("click", () => {
+//     enteredPcs.textContent = enteredPcs.textContent.slice(0, -1)
+// })
+btn9.addEventListener("touchend", () => {
     enteredPcs.textContent = enteredPcs.textContent + "9"
 })
-btnOk.addEventListener("click", endOrder)
+// btnOk.addEventListener("click", endOrder)
 btnOk.addEventListener("touchend", endOrder)

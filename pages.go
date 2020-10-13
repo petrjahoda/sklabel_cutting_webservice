@@ -20,7 +20,7 @@ func userBreak(writer http.ResponseWriter, request *http.Request, _ httprouter.P
 	}
 	logInfo(deviceName, "Sending user break page")
 	var data TimePageData
-	data.Time = time.Now().Format("15:04:05")
+	data.Time = time.Now().Format("15:04")
 	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
@@ -37,7 +37,7 @@ func userChange(writer http.ResponseWriter, request *http.Request, _ httprouter.
 	}
 	logInfo(deviceName, "Sending user change page")
 	var data TimePageData
-	data.Time = time.Now().Format("15:04:05")
+	data.Time = time.Now().Format("15:04")
 	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
@@ -54,7 +54,7 @@ func idleSelect(writer http.ResponseWriter, request *http.Request, _ httprouter.
 	}
 	logInfo(deviceName, "Sending idle select page")
 	var data TimePageData
-	data.Time = time.Now().Format("15:04:05")
+	data.Time = time.Now().Format("15:04")
 	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
@@ -72,7 +72,7 @@ func idleRunning(writer http.ResponseWriter, request *http.Request, _ httprouter
 	}
 	logInfo(deviceName, "Sending idle running page")
 	var data TimePageData
-	data.Time = time.Now().Format("15:04:05")
+	data.Time = time.Now().Format("15:04")
 	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
@@ -90,7 +90,7 @@ func cuttingEnd(writer http.ResponseWriter, request *http.Request, _ httprouter.
 	}
 	logInfo(deviceName, "Sending cutting end page")
 	var data TimePageData
-	data.Time = time.Now().Format("15:04:05")
+	data.Time = time.Now().Format("15:04")
 	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")
@@ -107,7 +107,7 @@ func home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params
 	}
 	logInfo(deviceName, "Sending home page")
 	var data TimePageData
-	data.Time = time.Now().Format("15:04:05")
+	data.Time = time.Now().Format("15:04")
 	writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	writer.Header().Set("Pragma", "no-cache")
 	writer.Header().Set("Expires", "0")

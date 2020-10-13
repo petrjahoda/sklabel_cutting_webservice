@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const version = "2020.4.1.11"
+const version = "2020.4.1.13"
 const serviceName = "SK Label Cutting Webservice"
 const serviceDescription = "Web Service for terminals for cutting workplaces"
 const zapsiDatabaseConnection = "zapsi_uzivatel:zapsi@tcp(zapsidatabase:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
@@ -108,7 +108,7 @@ func updateDeviceMap() {
 func streamTime(streamer *sse.Streamer) {
 	logInfo("MAIN", "Streaming time process started")
 	for {
-		streamer.SendString("", "time", time.Now().Format("15:04:05"))
+		streamer.SendString("", "time", time.Now().Format("15:04"))
 		time.Sleep(1 * time.Second)
 	}
 }
