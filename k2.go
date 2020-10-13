@@ -172,13 +172,14 @@ func getPcsFromK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	if skZapsiVp.RID > 0 {
 		data := strconv.FormatFloat(float64(skZapsiVp.Mnoz_PL), 'g', 1, 32)
 		if err != nil {
-			logError(deviceName, "Cannot parse MaterialBM: "+err.Error())
+			logError(deviceName, "Cannot parse Mnoz_PL: "+err.Error())
 			responseData.Data = "0"
 		} else {
 			logInfo(deviceName, "Pcs from K2: "+data)
 			responseData.Data = data
 		}
 	} else {
+		logInfo(deviceName, "No result, pcs from K2 set to 0")
 		responseData.Data = "0"
 	}
 
