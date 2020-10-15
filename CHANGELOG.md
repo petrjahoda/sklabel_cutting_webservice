@@ -14,6 +14,11 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.4.1.15] - 2020-10-15
+
+### Fixed
+- when changing user, proper sending Pcs="0"
+
 ## [2020.4.1.12] - 2020-10-12
 
 ### Fixed

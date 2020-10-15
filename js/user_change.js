@@ -30,14 +30,15 @@ function checkUser(barcode) {
             let currentResult = myObj.Data;
             console.log("0")
             if (currentResult === "ok") {
-                data = {
+                let data = {
                     OrderBarcode: sessionStorage.getItem("Order"),
                     DeviceId: sessionStorage.getItem("DeviceId"),
-                    UserId: sessionStorage.getItem("UserId")
+                    UserId: sessionStorage.getItem("UserId"),
+                    Pcs: "0"
                 };
                 fetch("/end_order", {
                     method: "POST",
-                    body: JSON.stringify(myObj.Result)
+                    body: JSON.stringify(data)
                 }).then((response) => {
                     console.log("Ending order in Zapsi response: " + response.statusText);
                     let data = {

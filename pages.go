@@ -114,5 +114,4 @@ func home(writer http.ResponseWriter, request *http.Request, _ httprouter.Params
 	tmpl := template.Must(template.ParseFiles("./html/home.html"))
 	_ = tmpl.Execute(writer, data)
 	logInfo(deviceName, "Home page sent")
-
 }

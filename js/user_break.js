@@ -97,7 +97,8 @@ function checkUser(barcode) {
                 let data = {
                     OrderBarcode: sessionStorage.getItem("Order"),
                     DeviceId: sessionStorage.getItem("DeviceId"),
-                    UserId: sessionStorage.getItem("UserId")
+                    UserId: sessionStorage.getItem("UserId"),
+                    Pcs: "0"
                 };
                 fetch("/end_order", {
                     method: "POST",

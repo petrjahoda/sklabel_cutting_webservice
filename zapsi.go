@@ -310,7 +310,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		writer.Header().Set("Content-Type", "application/json")
 		return
 	}
-	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId+"; pcs: "+data.Pcs)
+	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())

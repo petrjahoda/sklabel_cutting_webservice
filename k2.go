@@ -76,7 +76,7 @@ func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	zapsiK2.Typ = 200
 	zapsiK2.Data = dataToInsert
 	zapsiK2.Zprac = 0
-	db.Save(&zapsiK2)
+	db.Debug().Save(&zapsiK2)
 	var responseData K2ResponseData
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
