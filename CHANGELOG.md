@@ -18,9 +18,9 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
 ### Fixed
 - fixed leaking goroutine bug when opening sql connections, the right way is this way
-``db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
-sqlDB, _ := db.DB()
-defer sqlDB.Close()``
+``db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})``
+``sqlDB, _ := db.DB()``
+``defer sqlDB.Close()``
 
 
 ## [2020.4.1.15] - 2020-10-15
