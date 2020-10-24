@@ -1,1 +1,1 @@
-setTimeout(() => window.history.back(), 30000)
+setTimeout(() => window.history.back(), 3000)

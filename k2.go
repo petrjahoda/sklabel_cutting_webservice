@@ -49,6 +49,8 @@ func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httproute
 		return
 	}
 	db, err := gorm.Open(sqlserver.Open(skLabelDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		var responseData K2ResponseData
@@ -69,8 +71,6 @@ func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httproute
 		dataToInsert = "\\id_stroj{" + data.WorkplaceCode + "}\\id_osoby{" + userLogin + "}\\id_zakazky{" + data.OrderBarcode + "}\\id_krok{" + data.Code + "}\\id_operace{" + data.OrderBarcode + "}\\duvod{" + idleBarcode + "}"
 	}
 	logInfo(deviceName, "K2 STRING: "+dataToInsert)
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	var zapsiK2 ZapsiK2
 	zapsiK2.Cas = time.Now()
 	zapsiK2.Typ = 200
@@ -124,12 +124,13 @@ func checkOrderInK2(writer http.ResponseWriter, request *http.Request, _ httprou
 func checkOrderInSystem(deviceName string, order string) (SkZapsiVp, bool) {
 	logInfo(deviceName, "Checking order in K2: "+order)
 	db, err := gorm.Open(sqlserver.Open(skLabelDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		return SkZapsiVp{}, false
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var skZapsiVp SkZapsiVp
 	db.Where("MaterialBM IS NOT NULL").Where("MaterialBM > 0").Where("VPexp = ?", order).Find(&skZapsiVp)
 	if skZapsiVp.RID > 0 {
@@ -155,6 +156,8 @@ func getPcsFromK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	logInfo(deviceName, "Data: "+data.Data)
 
 	db, err := gorm.Open(sqlserver.Open(skLabelDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 		var responseData K2ResponseData
@@ -164,8 +167,7 @@ func getPcsFromK2(writer http.ResponseWriter, request *http.Request, _ httproute
 		logInfo(deviceName, "Get pcs from K2 finished, cannot get data from K2")
 		return
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var skZapsiVp SkZapsiVp
 	db.Where("MaterialBM IS NOT NULL").Where("MaterialBM > 0").Where("VPexp = ?", data.Data).Find(&skZapsiVp)
 	var responseData K2ResponseData

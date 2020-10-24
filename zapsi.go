@@ -49,12 +49,13 @@ type IdleData struct {
 func checkIfUserIsLoggedForTerminalId(deviceName string, terminalId int) (int, string, bool) {
 	logInfo(deviceName, "Checking if user is logged for terminal id: "+strconv.Itoa(terminalId))
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		return 0, "", false
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var terminalInputLogin TerminalInputLogin
 	db.Where("DeviceID = ?", terminalId).Where("DTE is NULL").Find(&terminalInputLogin)
 	var user User
@@ -71,12 +72,13 @@ func checkIfUserIsLoggedForTerminalId(deviceName string, terminalId int) (int, s
 func checkIpAddress(deviceName string, ipAddress string) (int, string, bool) {
 	logInfo(deviceName, "Checking ip address: "+ipAddress)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		return 0, "", false
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var device Device
 	db.Where("IpAddress = ?", ipAddress).Where("DeviceType = 100").Find(&device)
 	if len(device.Name) > 0 {
@@ -118,6 +120,8 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 		return
 	}
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		var responseData ZapsiResponseData
@@ -126,9 +130,6 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 		_ = json.NewEncoder(writer).Encode(responseData)
 		return
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
-
 	var order Order
 	db.Where("Barcode = ?", data.OrderBarcode).Find(&order)
 	userIdInt, err := strconv.Atoi(data.UserId)
@@ -189,12 +190,12 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 
 func GetActualWorkshiftId(deviceName string, deviceID string) int {
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		return 0
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	var workplace Workplace
 	db.Where("DeviceID = ?", deviceID).Find(&workplace)
 	var workplaceDivision WorkplaceDivision
@@ -281,11 +282,11 @@ func checkUser(writer http.ResponseWriter, request *http.Request, params httprou
 func checkUserInZapsi(deviceName string, userRfid string) (int, string, bool) {
 	logInfo(deviceName, "Checking user "+userRfid)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
 	var user User
 	db.Where("Rfid = ?", userRfid).Find(&user)
 	if user.OID > 0 {
@@ -312,6 +313,8 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 	}
 	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; userId:"+data.UserId+"; deviceId: "+data.DeviceId)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		responseData.Data = "nok"
@@ -323,8 +326,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		logError(deviceName, "Problem parsing count: "+err.Error())
 		pcsToInsert = 0
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var runningOrder TerminalInputOrder
 	db.Where("DeviceID = ?", data.DeviceId).Where("DTE is NULL").Find(&runningOrder)
 	runningOrder.DTE = sql.NullTime{
@@ -364,13 +366,14 @@ func getIdles(writer http.ResponseWriter, request *http.Request, params httprout
 	var dataIdles []DataIdle
 	var responseData DataIdles
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		writer.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(writer).Encode(responseData)
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var idles []Idle
 	db.Find(&idles)
 	for _, idle := range idles {
@@ -400,11 +403,12 @@ func endIdle(writer http.ResponseWriter, request *http.Request, params httproute
 	}
 	logInfo(deviceName, "OrderBarcode: "+data.OrderBarcode+"; idleId: "+data.IdleId+"; userId: "+data.UserId+"; deviceId: "+data.DeviceId)
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var runningIdle TerminalInputIdle
 	db.Where("IdleID = ?", data.IdleId).Where("UserID = ? ", data.UserId).Where("DeviceID = ?", data.DeviceId).Where("DTE is NULL").Find(&runningIdle)
 	runningIdle.DTE = sql.NullTime{
@@ -446,11 +450,12 @@ func createIdle(writer http.ResponseWriter, request *http.Request, params httpro
 		return
 	}
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError("MAIN", "Problem opening database: "+err.Error())
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var terminalInputIdle TerminalInputIdle
 	terminalInputIdle.DTS = time.Now()
 	terminalInputIdle.IdleID = idleIdInt
@@ -467,12 +472,13 @@ func createIdle(writer http.ResponseWriter, request *http.Request, params httpro
 
 func checkOrderInZapsi(deviceName string, skZapsiVp SkZapsiVp) {
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		return
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var order Order
 	db.Where("Barcode = ?", skZapsiVp.VPexp).Find(&order)
 	if order.OID > 0 {
@@ -491,12 +497,13 @@ func checkOrderInZapsi(deviceName string, skZapsiVp SkZapsiVp) {
 
 func GetUserLoginFor(deviceName string, userId string) string {
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		return ""
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var user User
 	db.Where("OID = ?", userId).Find(&user)
 	return user.Login
@@ -504,12 +511,13 @@ func GetUserLoginFor(deviceName string, userId string) string {
 
 func GetIdleBarcodeFor(deviceName string, idleId string) string {
 	db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	if err != nil {
 		logError(deviceName, "Problem opening database: "+err.Error())
 		return ""
 	}
-	sqlDB, err := db.DB()
-	defer sqlDB.Close()
+
 	var idle Idle
 	db.Where("OID = ?", idleId).Find(&idle)
 	return idle.Barcode
