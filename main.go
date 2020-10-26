@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const version = "2020.4.1.24"
+const version = "2020.4.1.26"
 const serviceName = "SK Label Cutting Webservice"
 const serviceDescription = "Web Service for terminals for cutting workplaces"
 const zapsiDatabaseConnection = "zapsi_uzivatel:zapsi@tcp(zapsidatabase:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
@@ -91,10 +91,11 @@ func updateDeviceMap() {
 	devicesMap = make(map[string]string)
 	for {
 		db, err := gorm.Open(mysql.Open(zapsiDatabaseConnection), &gorm.Config{})
+		sqlDB, _ := db.DB()
 		if err != nil {
 			logError("MAIN", "Problem opening database: "+err.Error())
 		}
-		sqlDB, err := db.DB()
+
 		var devices []Device
 		db.Where("DeviceType = 100").Find(&devices)
 		for _, device := range devices {
