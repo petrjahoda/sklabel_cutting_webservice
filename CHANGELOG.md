@@ -14,6 +14,11 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.4.2.2] - 2020-10-2
+
+### Changed
+- added /R to string when saving to K2
+
 ## [2020.4.1.30] - 2020-10-30
 
 ### Changed
