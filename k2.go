@@ -63,12 +63,12 @@ func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	idleBarcode := GetIdleBarcodeFor(deviceName, data.IdleId)
 	dataToInsert := ""
 	if data.Type == "order" {
-		dataToInsert = "\\id_stroj{" + data.WorkplaceCode + "}\\id_osoby{" + userLogin + "}\\id_zakazky{" + data.OrderBarcode + "}/R\\id_krok{" + data.Code + "}\\id_operace{" + data.OrderBarcode + "}"
+		dataToInsert = "\\id_stroj{" + data.WorkplaceCode + "}\\id_osoby{" + userLogin + "}\\id_zakazky{" + data.OrderBarcode + "/R}\\id_krok{" + data.Code + "}\\id_operace{" + data.OrderBarcode + "}"
 		if data.Code == "K302" {
 			dataToInsert += "\\pocet_impulzu{" + data.Pcs + "}"
 		}
 	} else {
-		dataToInsert = "\\id_stroj{" + data.WorkplaceCode + "}\\id_osoby{" + userLogin + "}\\id_zakazky{" + data.OrderBarcode + "}/R\\id_krok{" + data.Code + "}\\id_operace{" + data.OrderBarcode + "}\\duvod{" + idleBarcode + "}"
+		dataToInsert = "\\id_stroj{" + data.WorkplaceCode + "}\\id_osoby{" + userLogin + "}\\id_zakazky{" + data.OrderBarcode + "/R}\\id_krok{" + data.Code + "}\\id_operace{" + data.OrderBarcode + "}\\duvod{" + idleBarcode + "}"
 	}
 	logInfo(deviceName, "K2 STRING: "+dataToInsert)
 	var zapsiK2 ZapsiK2
