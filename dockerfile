@@ -1,4 +1,4 @@
-FROM alpine:latest as build
+FROM alpine:3.8 as build
 RUN apk add tzdata
 RUN cp /usr/share/zoneinfo/Europe/Prague /etc/localtime
 

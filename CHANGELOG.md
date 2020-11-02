@@ -19,6 +19,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 ### Changed
 - added /R to string when saving to K2
 - when closing order, terminal_input_login is closing only for user_change and user_break
+- docker image changed to alpine:3.8 because from version 3.9 it contains bad tzdata
 
 ## [2020.4.1.30] - 2020-10-30
 
