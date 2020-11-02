@@ -98,7 +98,8 @@ function checkUser(barcode) {
                     OrderBarcode: sessionStorage.getItem("Order"),
                     DeviceId: sessionStorage.getItem("DeviceId"),
                     UserId: sessionStorage.getItem("UserId"),
-                    Pcs: "0"
+                    Pcs: "0",
+                    CloseLogin: "true"
                 };
                 fetch("/end_order", {
                     method: "POST",

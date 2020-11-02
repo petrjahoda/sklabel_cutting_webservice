@@ -52,7 +52,8 @@ function endOrder() {
             OrderBarcode: sessionStorage.getItem("Order"),
             DeviceId: sessionStorage.getItem("DeviceId"),
             UserId: sessionStorage.getItem("UserId"),
-            Pcs: enteredPcs.textContent
+            Pcs: enteredPcs.textContent,
+            CloseLogin: "false"
         };
         fetch("/end_order", {
             method: "POST",

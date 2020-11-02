@@ -18,6 +18,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 
 ### Changed
 - added /R to string when saving to K2
+- closing terminal_input_login only when user_change and user_break
 
 ## [2020.4.1.30] - 2020-10-30
 

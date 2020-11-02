@@ -37,6 +37,7 @@ type OrderData struct {
 	DeviceId     string
 	UserId       string
 	Pcs          string
+	CloseLogin   string
 }
 
 type IdleData struct {
@@ -337,6 +338,21 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 	runningOrder.Count = pcsToInsert
 	runningOrder.AverageCycle = float32(time.Since(runningOrder.DTS).Minutes()) / float32(pcsToInsert)
 	db.Save(&runningOrder)
+	if data.CloseLogin == "true" {
+		var terminalInputLogin TerminalInputLogin
+		db.Where("DeviceID = ? ", data.DeviceId).Where("DTE is NULL").Find(&terminalInputLogin)
+		if terminalInputLogin.OID > 0 {
+			logInfo(deviceName, "Closing terminal_input_login")
+			terminalInputLogin.DTE = sql.NullTime{
+				Time:  time.Now(),
+				Valid: true,
+			}
+			terminalInputLogin.Interval = float32(time.Since(terminalInputLogin.DTS).Minutes())
+			db.Save(&terminalInputLogin)
+		} else {
+			logError(deviceName, "No terminal_input_login found when closing order")
+		}
+	}
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(writer).Encode(responseData)
