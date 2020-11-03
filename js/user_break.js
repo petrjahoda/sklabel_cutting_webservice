@@ -10,7 +10,7 @@ fetch("/end_order", {
     console.log("Ending order in Zapsi response: " + response.statusText);
     let data = {
         Type: "order",
-        Code: "K219",
+        Code: "219",
         WorkplaceCode: sessionStorage.getItem("WorkplaceCode"),
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),

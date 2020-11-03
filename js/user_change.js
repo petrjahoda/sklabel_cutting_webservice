@@ -44,7 +44,7 @@ function checkUser(barcode) {
                     console.log("Ending order in Zapsi response: " + response.statusText);
                     let data = {
                         Type: "order",
-                        Code: "K105",
+                        Code: "105",
                         WorkplaceCode: workplace.textContent,
                         UserId: sessionStorage.getItem("UserId"),
                         OrderBarcode: sessionStorage.getItem("Order"),

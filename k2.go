@@ -64,7 +64,7 @@ func saveDataToK2(writer http.ResponseWriter, request *http.Request, _ httproute
 	dataToInsert := ""
 	if data.Type == "order" {
 		dataToInsert = "\\id_stroj{" + data.WorkplaceCode + "}\\id_osoby{" + userLogin + "}\\id_zakazky{" + data.OrderBarcode + "/R}\\id_krok{" + data.Code + "}\\id_operace{" + data.OrderBarcode + "/R}"
-		if data.Code == "K302" {
+		if data.Code == "302" {
 			dataToInsert += "\\pocet_impulzu{" + data.Pcs + "}"
 		}
 	} else {

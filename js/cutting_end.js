@@ -36,7 +36,7 @@ fetch("/get_k2Pcs", {
 function endOrder() {
     let data = {
         Type: "order",
-        Code: "K302",
+        Code: "302",
         WorkplaceCode: sessionStorage.getItem("WorkplaceCode"),
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),

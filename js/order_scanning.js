@@ -48,7 +48,7 @@ function checkOrder(barcode) {
                 sessionStorage.setItem("Order", myObj.Result)
                 let data = {
                     Type: "order",
-                    Code: "K108",
+                    Code: "108",
                     WorkplaceCode: workplace.textContent,
                     UserId: sessionStorage.getItem("UserId"),
                     OrderBarcode: sessionStorage.getItem("Order"),

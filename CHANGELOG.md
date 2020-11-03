@@ -20,6 +20,7 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 - removed duplicated click events, that causes duplicated calling
 - fixed creating new terminal_input_idle... checking open just for the device
 - added /R to string for operation when saving to K2
+- when saving code to K2, saving only code "302" instead of "K302"
 
 ## [2020.4.2.2] - 2020-10-2
 

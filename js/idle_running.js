@@ -18,7 +18,7 @@ function endIdle() {
     console.log("clicked")
     let data = {
         Type: "idle",
-        Code: "K119",
+        Code: "119",
         WorkplaceCode: workplace.textContent,
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),

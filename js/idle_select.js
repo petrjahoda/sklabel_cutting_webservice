@@ -167,7 +167,7 @@ function showNext() {
 function ProcessIdleStart(btn) {
     let data = {
         Type: "idle",
-        Code: "K219",
+        Code: "219",
         WorkplaceCode: workplace.textContent,
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),
