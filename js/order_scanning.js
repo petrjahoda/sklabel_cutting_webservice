@@ -31,9 +31,9 @@ document.addEventListener("touchend", function (event) {
 goBack.addEventListener("touchend", () => {
     window.history.back();
 })
-goBack.addEventListener("click", () => {
-    window.history.back();
-})
+// goBack.addEventListener("click", () => {
+//     window.history.back();
+// })
 
 function checkOrder(barcode) {
     let data = {Data: barcode};
@@ -62,7 +62,9 @@ function checkOrder(barcode) {
                     let data = {
                         OrderBarcode: myObj.Result,
                         DeviceId: sessionStorage.getItem("DeviceId"),
-                        UserId: sessionStorage.getItem("UserId")
+                        UserId: sessionStorage.getItem("UserId"),
+                        Pcs: "0",
+                        CloseLogin: "false"
                     };
                     fetch("/create_order", {
                         method: "POST",

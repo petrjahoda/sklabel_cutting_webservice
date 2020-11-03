@@ -45,9 +45,9 @@ fetch("/get_idles", {
             }
             if (numberOfIdles <= 12) {
                 document.body.appendChild(btn);
-                btn.addEventListener("click", function (event) {
-                    ProcessIdleStart(btn);
-                });
+                // btn.addEventListener("click", function (event) {
+                //     ProcessIdleStart(btn);
+                // });
                 btn.addEventListener("touchend", function (event) {
                     ProcessIdleStart(btn);
                 });
@@ -96,9 +96,9 @@ function showPrevious() {
         }
         if (numberOfIdles > 12 * (actualPage - 1) && numberOfIdles <= (12 * (actualPage))) {
             document.body.appendChild(btn);
-            btn.addEventListener("click", function (event) {
-                ProcessIdleStart(btn);
-            });
+            // btn.addEventListener("click", function (event) {
+            //     ProcessIdleStart(btn);
+            // });
             btn.addEventListener("touchend", function (event) {
                 ProcessIdleStart(btn);
             });
@@ -149,9 +149,9 @@ function showNext() {
         }
         if (numberOfIdles > 12 * (actualPage - 1) && numberOfIdles <= (12 * (actualPage))) {
             document.body.appendChild(btn);
-            btn.addEventListener("click", function (event) {
-                ProcessIdleStart(btn);
-            });
+            // btn.addEventListener("click", function (event) {
+            //     ProcessIdleStart(btn);
+            // });
             btn.addEventListener("touchend", function (event) {
                 ProcessIdleStart(btn);
             });
@@ -201,7 +201,7 @@ function ProcessIdleStart(btn) {
     });
 }
 
-previous.addEventListener("click", showPrevious)
+// previous.addEventListener("click", showPrevious)
 previous.addEventListener("touchend", showPrevious)
-next.addEventListener("click", showNext)
+// next.addEventListener("click", showNext)
 next.addEventListener("touchend", showNext)

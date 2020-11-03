@@ -171,7 +171,7 @@ func createOrder(writer http.ResponseWriter, request *http.Request, params httpr
 	}
 	db.Save(&terminalInputOrder)
 	var terminalInputLogin TerminalInputLogin
-	db.Where("DeviceID = ?", data.DeviceId).Where("UserID = ?", data.UserId).Where("DTE is NULL").Find(&terminalInputLogin)
+	db.Where("DeviceID = ?", data.DeviceId).Where("DTE is NULL").Find(&terminalInputLogin)
 	if terminalInputLogin.OID > 0 {
 		logInfo(deviceName, "User already logged in terminal_input_login")
 	} else if userIdInt != 0 {
@@ -339,6 +339,7 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 	runningOrder.AverageCycle = float32(time.Since(runningOrder.DTS).Minutes()) / float32(pcsToInsert)
 	db.Save(&runningOrder)
 	if data.CloseLogin == "true" {
+		logInfo(deviceName, "Close login from page: true")
 		var terminalInputLogin TerminalInputLogin
 		db.Where("DeviceID = ? ", data.DeviceId).Where("DTE is NULL").Find(&terminalInputLogin)
 		if terminalInputLogin.OID > 0 {
@@ -352,6 +353,8 @@ func endOrder(writer http.ResponseWriter, request *http.Request, params httprout
 		} else {
 			logError(deviceName, "No terminal_input_login found when closing order")
 		}
+	} else {
+		logInfo(deviceName, "Close login from page: false")
 	}
 	responseData.Data = "ok"
 	writer.Header().Set("Content-Type", "application/json")

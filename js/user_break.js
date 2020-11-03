@@ -111,7 +111,9 @@ function checkUser(barcode) {
                     data = {
                         OrderBarcode: sessionStorage.getItem("Order"),
                         DeviceId: sessionStorage.getItem("DeviceId"),
-                        UserId: sessionStorage.getItem("UserId")
+                        UserId: sessionStorage.getItem("UserId"),
+                        Pcs: "0",
+                        CloseLogin: "false"
                     };
                     fetch("/create_order", {
                         method: "POST",

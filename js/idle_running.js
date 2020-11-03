@@ -12,7 +12,7 @@ time.addEventListener('time', (e) => {
     document.getElementById("time").innerHTML = e.data;
 }, false);
 
-idleEnd.addEventListener("click", endIdle)
+idleEnd.addEventListener("touchend", endIdle)
 
 function endIdle() {
     console.log("clicked")

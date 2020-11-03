@@ -14,6 +14,12 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.4.2.3] - 2020-10-3
+
+### Fixed
+- removed duplicated click events, that causes duplicated calling
+- fixed creating new terminal_input_idle... checking open just for the device
+
 ## [2020.4.2.2] - 2020-10-2
 
 ### Changed
