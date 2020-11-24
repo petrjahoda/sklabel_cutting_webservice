@@ -9,48 +9,31 @@ fetch("/end_order", {
 }).then((response) => {
     console.log("Ending order in Zapsi response: " + response.statusText);
     let data = {
-        Type: "order",
+        Type: "idle",
         Code: "219",
         WorkplaceCode: sessionStorage.getItem("WorkplaceCode"),
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),
-        IdleId: sessionStorage.getItem("IdleId"),
+        IdleId: "0004",
     };
     fetch("/save_code", {
         method: "POST",
         body: JSON.stringify(data)
     }).then((response) => {
         console.log("Saving code to K2 response: " + response.statusText);
+        sessionStorage.setItem("UserId", "")
+        sessionStorage.setItem("User", "Přihlášen: " + "")
+        user.textContent = "Nenávaznost obsluhy"
         let data = {
-            Type: "order",
-            Code: "0004",
-            WorkplaceCode: workplace.textContent,
-            UserId: sessionStorage.getItem("UserId"),
             OrderBarcode: sessionStorage.getItem("Order"),
-            IdleId: sessionStorage.getItem("IdleId"),
+            DeviceId: sessionStorage.getItem("DeviceId"),
+            UserId: sessionStorage.getItem("")
         };
-        fetch("/save_code", {
+        fetch("/create_order", {
             method: "POST",
             body: JSON.stringify(data)
         }).then((response) => {
-            console.log("Saving code to K2 response: " + response.statusText);
-            sessionStorage.setItem("UserId", "")
-            sessionStorage.setItem("User", "Přihlášen: " + "")
-            user.textContent = "Nenávaznost obsluhy"
-            let data = {
-                OrderBarcode: sessionStorage.getItem("Order"),
-                DeviceId: sessionStorage.getItem("DeviceId"),
-                UserId: sessionStorage.getItem("")
-            };
-            fetch("/create_order", {
-                method: "POST",
-                body: JSON.stringify(data)
-            }).then((response) => {
-                console.log("Starting order in Zapsi response: " + response.statusText);
-            }).catch((error) => {
-                console.error('Error:', error);
-            });
-
+            console.log("Starting order in Zapsi response: " + response.statusText);
         }).catch((error) => {
             console.error('Error:', error);
         });

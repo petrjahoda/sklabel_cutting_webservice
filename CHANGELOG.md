@@ -14,6 +14,12 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.4.2.4] - 2020-11-24
+
+### Changed
+- when saving K119, saving as order, not idle
+- when saving K219, saving 0004 as idle type for user change (removed saving 0004 as code for K2) 
+
 ## [2020.4.2.3] - 2020-10-3
 
 ### Fixed

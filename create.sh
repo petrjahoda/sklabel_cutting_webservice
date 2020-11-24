@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
+./update
+name=${PWD##*/}
+go get -u all
+GOOS=linux go build -ldflags="-s -w" -o linux/"$name"
 cd linux
-upx sklabel_cutting_webservice_linux
+upx "$name"
 cd ..
-docker rmi -f petrjahoda/sklabel_cutting_webservice:latest
-docker build -t petrjahoda/sklabel_cutting_webservice:latest .
-docker push petrjahoda/sklabel_cutting_webservice:latest
 
-docker rmi -f petrjahoda/sklabel_cutting_webservice:2020.4.2
-docker build -t petrjahoda/sklabel_cutting_webservice:2020.4.2 .
-docker push petrjahoda/sklabel_cutting_webservice:2020.4.2
+docker rmi -f petrjahoda/"$name":latest
+docker  build -t petrjahoda/"$name":latest .
+docker push petrjahoda/"$name":latest
+
+docker rmi -f petrjahoda/"$name":2020.4.2
+docker build -t petrjahoda/"$name":2020.4.2 .
+docker push petrjahoda/"$name":2020.4.2

@@ -3,14 +3,14 @@ module sklabel_cutting_webservice
 go 1.15
 
 require (
-	github.com/TwinProduction/go-color v0.0.2
+	github.com/TwinProduction/go-color v0.0.3
 	github.com/denisenkom/go-mssqldb v0.0.0-20201103052722-628e054fa9c3 // indirect
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/julienschmidt/sse v0.0.0-20190921213156-72db694fe9e6
-	github.com/kardianos/service v1.1.0
-	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
-	golang.org/x/sys v0.0.0-20201101102859-da207088b7d1 // indirect
+	github.com/kardianos/service v1.2.0
+	golang.org/x/crypto v0.0.0-20201117144127-c1f2f97bffc9 // indirect
+	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/driver/sqlserver v1.0.5
-	gorm.io/gorm v1.20.5
+	gorm.io/gorm v1.20.7
 )

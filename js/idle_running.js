@@ -17,7 +17,7 @@ idleEnd.addEventListener("touchend", endIdle)
 function endIdle() {
     console.log("clicked")
     let data = {
-        Type: "idle",
+        Type: "order",
         Code: "119",
         WorkplaceCode: workplace.textContent,
         UserId: sessionStorage.getItem("UserId"),
