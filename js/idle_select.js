@@ -171,7 +171,7 @@ function ProcessIdleStart(btn) {
         WorkplaceCode: workplace.textContent,
         UserId: sessionStorage.getItem("UserId"),
         OrderBarcode: sessionStorage.getItem("Order"),
-        IdleId: sessionStorage.getItem("IdleId"),
+        IdleId: sessionStorage.getItem(btn.dataset.id),
     };
     fetch("/save_code", {
         method: "POST",

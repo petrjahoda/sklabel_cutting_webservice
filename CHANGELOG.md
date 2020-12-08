@@ -14,6 +14,11 @@ adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html) rules.
 * ```Fixed``` for any bug fixes.
 * ```Security``` in case of vulnerabilities.
 
+## [2020.4.3.8] - 2020-12-08
+
+### Fixed
+- when saving idle to K2, proper IdleID send from javascript
+
 ## [2020.4.2.4] - 2020-11-24
 
 ### Changed
