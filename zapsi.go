@@ -381,7 +381,7 @@ func getIdles(writer http.ResponseWriter, request *http.Request, params httprout
 	}
 
 	var idles []Idle
-	db.Find(&idles)
+	db.Where("IdleTypeID != 1").Find(&idles)
 	for _, idle := range idles {
 		var dataIdle DataIdle
 		dataIdle.Id = idle.OID

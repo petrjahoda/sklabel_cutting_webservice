@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const version = "2020.4.3.9"
+const version = "2020.4.3.15"
 const serviceName = "SK Label Cutting Webservice"
 const serviceDescription = "Web Service for terminals for cutting workplaces"
 const zapsiDatabaseConnection = "zapsi_uzivatel:zapsi@tcp(zapsidatabase:3306)/zapsi2?charset=utf8mb4&parseTime=True&loc=Local"
